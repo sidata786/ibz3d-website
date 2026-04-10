@@ -1374,20 +1374,24 @@
         desc: 'Fluid wave-form vase with a translucent silk finish. Watertight — ready for fresh or dried flowers. A conversation piece for any room.',
         colors: ['#a8c5da', '#98d8c8', '#f4a460', '#f0ede8'],
         sizes: ['S — 6"', 'M — 9"', 'L — 12"']
-      }
-      /* ── Add new products here ─────────────────────────────────
-      ,{
+      },
+      {
         id: 'p6',
-        name: 'Product Name',
-        category: 'home-decor',   // or 'functional' — add new categories in filter-bar HTML
-        price: 0,
-        emoji: '🏠',
-        badge: null,              // 'new' | 'hot' | 'ltd' | 'sale' | null
-        desc: 'Description.',
-        colors: ['#f0ede8'],
-        sizes: ['Standard']
+        name: 'Bismillah Napkin Holder',
+        category: 'home-decor',
+        price: 30,
+        emoji: '✨',
+        badge: 'new',
+        desc: 'A stunning gold-finished 3D printed napkin holder spelling "BISMILLAH" in bold block lettering. Crafted in premium metallic gold PLA, this piece blends Islamic tradition with modern table decor. The open-letter design holds napkins securely while doubling as an elegant dining table centrepiece. A meaningful gift for housewarmings, weddings, or Eid celebrations.',
+        colors: ['#C5A028'],
+        sizes: ['Standard'],
+        images: [
+          'images/products/bismillah/1.jpg',
+          'images/products/bismillah/2.jpg',
+          'images/products/bismillah/3.jpg',
+          'images/products/bismillah/4.jpg'
+        ]
       }
-      ──────────────────────────────────────────────────────────── */
     ];
 
     /* ============================================================
@@ -1494,7 +1498,9 @@
       grid.innerHTML = list.map(p => `
         <div class="product-card reveal" onclick="openModal('${p.id}')">
           <div class="product-thumb">
-            <span style="font-size:72px; user-select:none">${p.emoji}</span>
+            ${p.images && p.images.length
+              ? `<img src="${p.images[0]}" alt="${p.name}" />`
+              : `<span style="font-size:72px; user-select:none">${p.emoji}</span>`}
             ${p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge.toUpperCase()}</div>` : ''}
             <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('${p.id}')">
               + Quick Add
@@ -1540,7 +1546,19 @@
       selectedColor = p.colors[0];
       selectedSize = p.sizes[0];
 
-      document.getElementById('modal-emoji').textContent = p.emoji;
+      const modalVisual = document.getElementById('modal-visual');
+      if (p.images && p.images.length) {
+        modalVisual.innerHTML = `
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <img src="${p.images[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <div style="position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;">
+            ${p.images.map((src, i) => `<img src="${src}" onclick="this.closest('.modal-visual').querySelector('img').src='${src}'" style="width:44px;height:44px;object-fit:cover;cursor:pointer;border:2px solid ${i===0?'var(--orange)':'var(--border)'};border-radius:2px;" />`).join('')}
+          </div>`;
+      } else {
+        modalVisual.innerHTML = `
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <span id="modal-emoji" style="position:relative;z-index:1">${p.emoji}</span>`;
+      }
       document.getElementById('modal-category').textContent = categoryLabel(p.category);
       document.getElementById('modal-name').textContent = p.name;
       document.getElementById('modal-desc').textContent = p.desc;
