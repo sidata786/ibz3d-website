@@ -1399,6 +1399,8 @@
     let activeProductId = null;
     let selectedColor = null;
     let selectedSize = null;
+    let activeImgIndex = 0;
+    let activeImgList = [];
 
     function addToCart(productId, extraMeta) {
       const p = PRODUCTS.find(x => x.id === productId);
@@ -1549,16 +1551,29 @@
         modalVisual.style.flexDirection = 'column';
         modalVisual.style.alignItems = 'stretch';
         modalVisual.style.justifyContent = 'flex-start';
+        activeImgIndex = 0;
+        activeImgList = p.images;
         modalVisual.innerHTML = `
           <button class="modal-close" onclick="closeModal()">✕</button>
           <img id="modal-main-img" src="${p.images[0]}" alt="${p.name}"
                style="width:100%;flex:1;object-fit:cover;display:block;min-height:0;" />
           ${p.images.length > 1 ? `
+          <button onclick="stepModalImg(-1)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);
+            background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:36px;height:36px;
+            font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;">&#8249;</button>
+          <button onclick="stepModalImg(1)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+            background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:36px;height:36px;
+            font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;">&#8250;</button>
+          <div id="modal-dots" style="position:absolute;bottom:76px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:2;">
+            ${p.images.map((_, i) => `
+              <div onclick="goModalImg(${i})" style="width:8px;height:8px;border-radius:50%;cursor:pointer;
+                background:${i===0?'var(--orange)':'rgba(255,255,255,0.35)'};transition:background 0.2s;"></div>`
+            ).join('')}
+          </div>
           <div style="display:flex;gap:6px;padding:10px;background:var(--dark);flex-shrink:0;">
             ${p.images.map((src, i) => `
-              <img src="${src}" onclick="document.getElementById('modal-main-img').src='${src}';
-                   this.parentElement.querySelectorAll('img').forEach(t=>t.style.borderColor='var(--border)');
-                   this.style.borderColor='var(--orange)';"
+              <img src="${src}" onclick="goModalImg(${i})"
+                   id="modal-thumb-${i}"
                    style="width:56px;height:56px;object-fit:cover;cursor:pointer;
                           border:2px solid ${i===0?'var(--orange)':'var(--border)'};border-radius:2px;flex-shrink:0;" />`
             ).join('')}
@@ -1567,6 +1582,8 @@
         modalVisual.style.flexDirection = '';
         modalVisual.style.alignItems = '';
         modalVisual.style.justifyContent = '';
+        activeImgIndex = 0;
+        activeImgList = [];
         modalVisual.innerHTML = `
           <button class="modal-close" onclick="closeModal()">✕</button>
           <span id="modal-emoji" style="position:relative;z-index:1">${p.emoji}</span>`;
@@ -1605,6 +1622,28 @@
       document.getElementById('product-modal').classList.remove('open');
       document.body.style.overflow = '';
       activeProductId = null;
+      activeImgList = [];
+      activeImgIndex = 0;
+    }
+
+    function goModalImg(i) {
+      if (!activeImgList.length) return;
+      activeImgIndex = (i + activeImgList.length) % activeImgList.length;
+      const src = activeImgList[activeImgIndex];
+      const mainImg = document.getElementById('modal-main-img');
+      if (mainImg) mainImg.src = src;
+      // Update dots
+      const dots = document.querySelectorAll('#modal-dots div');
+      dots.forEach((d, idx) => d.style.background = idx === activeImgIndex ? 'var(--orange)' : 'rgba(255,255,255,0.35)');
+      // Update thumb borders
+      activeImgList.forEach((_, idx) => {
+        const t = document.getElementById('modal-thumb-' + idx);
+        if (t) t.style.borderColor = idx === activeImgIndex ? 'var(--orange)' : 'var(--border)';
+      });
+    }
+
+    function stepModalImg(dir) {
+      goModalImg(activeImgIndex + dir);
     }
 
     function selectColor(el, color) {
@@ -1667,6 +1706,8 @@
         closeModal();
         if (document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
       }
+      if (e.key === 'ArrowLeft'  && activeImgList.length) stepModalImg(-1);
+      if (e.key === 'ArrowRight' && activeImgList.length) stepModalImg(1);
     });
 
     /* ============================================================
