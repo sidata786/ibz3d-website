@@ -1599,7 +1599,7 @@
         modalVisual.innerHTML = `
           <button class="modal-close" onclick="closeModal()">✕</button>
           <img id="modal-main-img" src="${p.images[0]}" alt="${p.name}"
-               style="width:100%;flex:1;object-fit:cover;display:block;min-height:0;" />
+               style="width:100%;flex:1;object-fit:contain;display:block;min-height:0;background:var(--dark);" />
           ${p.images.length > 1 ? `
           <button onclick="stepModalImg(-1)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);
             background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:36px;height:36px;
