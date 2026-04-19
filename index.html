@@ -1422,8 +1422,9 @@
         emoji: '🤲',
         badge: 'new',
         desc: 'A beautiful freestanding cursive script sign spelling "Bismillah" — start every moment with intention. Handcrafted in smooth matte PLA, this elegant piece stands freely on any table, shelf, or mantle with no mounting needed. Perfect as a dining table centrepiece or a thoughtful gift for housewarmings, weddings, Ramadan, or Eid.',
-        colors: ['#89CFF0', '#f0ede8', '#080808', '#c5a028', '#2c3e50'],
+        colors: ['#89CFF0', '#f0ede8', '#c5a028'],
         sizes: ['8" Wide', '12" Wide'],
+        customSize: true,
         images: [
           'images/products/bismillah-script/1.jpg',
           'images/products/bismillah-script/2.jpg'
@@ -1644,10 +1645,29 @@
       `).join('');
 
       // Sizes
-      document.getElementById('modal-sizes').innerHTML = p.sizes.map((s, i) => `
+      let sizesHtml = p.sizes.map((s, i) => `
         <button class="size-btn ${i === 0 ? 'selected' : ''}"
                 onclick="selectSize(this, '${escHtml(s)}')">${escHtml(s)}</button>
       `).join('');
+
+      if (p.customSize) {
+        sizesHtml += `
+          <button class="size-btn" onclick="showCustomSizeInput(this)" id="custom-size-toggle"
+            style="border-style:dashed;color:var(--orange);border-color:var(--orange);">✎ Custom</button>
+          <div id="custom-size-row" style="display:none;width:100%;margin-top:8px;gap:8px;align-items:center;">
+            <input type="number" id="custom-size-input" min="1" max="48" placeholder="Width in inches"
+              style="flex:1;background:var(--dark);border:1px solid var(--border);color:var(--white);
+                     font-family:var(--font-mono);font-size:12px;padding:8px 12px;outline:none;
+                     width:120px;" 
+              onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'" />
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--grey);">inches</span>
+            <button onclick="applyCustomSize()" style="background:var(--orange);color:var(--black);border:none;
+              font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+              padding:8px 14px;cursor:pointer;">Apply</button>
+          </div>`;
+      }
+
+      document.getElementById('modal-sizes').innerHTML = sizesHtml;
 
       // Meta tags
       document.getElementById('modal-meta').innerHTML = [
@@ -1802,6 +1822,34 @@
       document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
       selectedSize = size;
+      // Collapse custom size input if a preset is clicked
+      const row = document.getElementById('custom-size-row');
+      if (row) row.style.display = 'none';
+    }
+
+    function showCustomSizeInput(btn) {
+      // Deselect all preset size buttons
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      // Show the custom input row
+      const row = document.getElementById('custom-size-row');
+      if (row) {
+        row.style.display = 'flex';
+        const input = document.getElementById('custom-size-input');
+        if (input) input.focus();
+      }
+    }
+
+    function applyCustomSize() {
+      const input = document.getElementById('custom-size-input');
+      if (!input) return;
+      const val = parseFloat(input.value);
+      if (!val || val < 1 || val > 48) {
+        showToast('Please enter a width between 1 and 48 inches.');
+        return;
+      }
+      selectedSize = val + '" Wide (Custom)';
+      showToast('Custom size set: ' + val + '" wide');
     }
 
     /* ============================================================
