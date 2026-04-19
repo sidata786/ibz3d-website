@@ -1427,7 +1427,10 @@
         images: [
           'images/products/bismillah-script/1.jpg',
           'images/products/bismillah-script/2.jpg'
-        ]
+        ],
+        colorImages: {
+          '#89CFF0': ['images/products/bismillah-script/1.jpg', 'images/products/bismillah-script/2.jpg']
+        }
       }
     ];
 
@@ -1689,6 +1692,110 @@
       document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
       el.classList.add('selected');
       selectedColor = color;
+
+      // If this product has color-specific images, swap them
+      if (!activeProductId) return;
+      const p = PRODUCTS.find(x => x.id === activeProductId);
+      if (!p || !p.images || !p.images.length) return;
+
+      const mainImg = document.getElementById('modal-main-img');
+      if (!mainImg) return;
+
+      if (p.colorImages && p.colorImages[color]) {
+        // This color has real photos — show them and remove any filter
+        activeImgList = p.colorImages[color];
+        activeImgIndex = 0;
+        mainImg.src = activeImgList[0];
+        mainImg.style.filter = '';
+
+        // Update thumbnails
+        const thumbStrip = mainImg.parentElement.querySelector('div:last-child');
+        if (thumbStrip && thumbStrip.children.length) {
+          thumbStrip.innerHTML = activeImgList.map((src, i) => `
+            <img src="${src}" onclick="goModalImg(${i})"
+                 id="modal-thumb-${i}"
+                 style="width:56px;height:56px;object-fit:cover;cursor:pointer;
+                        border:2px solid ${i===0?'var(--orange)':'var(--border)'};border-radius:2px;flex-shrink:0;" />`
+          ).join('');
+        }
+
+        // Update dots
+        const dotsContainer = document.getElementById('modal-dots');
+        if (dotsContainer) {
+          dotsContainer.innerHTML = activeImgList.map((_, i) => `
+            <div onclick="goModalImg(${i})" style="width:8px;height:8px;border-radius:50%;cursor:pointer;
+              background:${i===0?'var(--orange)':'rgba(255,255,255,0.35)'};transition:background 0.2s;"></div>`
+          ).join('');
+        }
+      } else {
+        // No real photos for this color — apply a CSS tint preview
+        // Reset to default images first
+        activeImgList = p.images;
+        activeImgIndex = 0;
+        mainImg.src = activeImgList[0];
+
+        // Calculate a hue-rotate + saturate filter based on target color
+        mainImg.style.filter = getColorFilter(color);
+
+        // Update thumbnails back to defaults
+        const thumbStrip = mainImg.parentElement.querySelector('div:last-child');
+        if (thumbStrip && thumbStrip.children.length) {
+          thumbStrip.innerHTML = activeImgList.map((src, i) => `
+            <img src="${src}" onclick="goModalImg(${i})"
+                 id="modal-thumb-${i}"
+                 style="width:56px;height:56px;object-fit:cover;cursor:pointer;filter:${getColorFilter(color)};
+                        border:2px solid ${i===0?'var(--orange)':'var(--border)'};border-radius:2px;flex-shrink:0;" />`
+          ).join('');
+        }
+
+        const dotsContainer = document.getElementById('modal-dots');
+        if (dotsContainer) {
+          dotsContainer.innerHTML = activeImgList.map((_, i) => `
+            <div onclick="goModalImg(${i})" style="width:8px;height:8px;border-radius:50%;cursor:pointer;
+              background:${i===0?'var(--orange)':'rgba(255,255,255,0.35)'};transition:background 0.2s;"></div>`
+          ).join('');
+        }
+      }
+    }
+
+    /* Generate a CSS filter to tint an image toward a target color.
+       Works by mapping from the base baby-blue hue to the target hue. */
+    function getColorFilter(hex) {
+      // Parse hex to HSL
+      const r = parseInt(hex.slice(1,3), 16) / 255;
+      const g = parseInt(hex.slice(3,5), 16) / 255;
+      const b = parseInt(hex.slice(5,7), 16) / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const l = (max + min) / 2;
+      let h = 0, s = 0;
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        else if (max === g) h = ((b - r) / d + 2) / 6;
+        else h = ((r - g) / d + 4) / 6;
+      }
+      const targetHue = Math.round(h * 360);
+      const targetSat = s;
+      const targetLight = l;
+
+      // Base image is baby blue (~200° hue)
+      const baseHue = 200;
+      const rotation = targetHue - baseHue;
+
+      // For very dark colors (black), desaturate and darken
+      if (targetLight < 0.15) {
+        return 'saturate(0) brightness(0.25)';
+      }
+      // For very light colors (white/cream), desaturate and brighten
+      if (targetSat < 0.08) {
+        return 'saturate(0.1) brightness(1.3)';
+      }
+      // For gold/warm colors, shift hue and adjust saturation
+      const satMul = Math.min(targetSat / 0.55, 2.0).toFixed(2);
+      const brightMul = (targetLight < 0.4 ? 0.7 : targetLight > 0.7 ? 1.2 : 1.0).toFixed(2);
+
+      return `hue-rotate(${rotation}deg) saturate(${satMul}) brightness(${brightMul})`;
     }
 
     function selectSize(el, size) {
