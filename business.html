@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ibz3d — Business Products Preview</title>
+  <meta name="description" content="ibz3d — Branded promotional products, signage, and custom 3D printed items for businesses. Handcrafted in Milton, Ontario.">
+  <title>ibz3d — Business &amp; Branded Products</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -17,6 +18,7 @@
       --dark:         #111111;
       --card:         #161616;
       --border:       #252525;
+      --border-dim:   #1a1a1a;
       --orange:       #FF4D00;
       --orange-dim:   #cc3d00;
       --orange-glow:  rgba(255,77,0,0.12);
@@ -60,6 +62,7 @@
 
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; }
+    img { display: block; max-width: 100%; }
 
     .label {
       font-family: var(--font-mono);
@@ -76,7 +79,7 @@
     }
 
     /* ============================================================
-       NAV (simplified for preview)
+       NAV
        ============================================================ */
     nav {
       position: fixed;
@@ -89,6 +92,7 @@
       padding: 0 40px;
       background: rgba(8,8,8,0.92);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -97,8 +101,17 @@
       font-size: 26px;
       letter-spacing: 3px;
       color: var(--white);
+      cursor: pointer;
+      transition: color 0.2s;
     }
     .nav-logo em { color: var(--orange); font-style: normal; }
+    .nav-logo:hover { color: var(--grey-light); }
+
+    .nav-right-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
 
     .back-link {
       font-family: var(--font-mono);
@@ -111,16 +124,31 @@
     }
     .back-link:hover { color: var(--orange); }
 
+    .nav-quote-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      padding: 8px 18px;
+      background: var(--orange);
+      color: var(--black);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nav-quote-btn:hover { background: var(--white); }
+
     /* ============================================================
-       BUSINESS PAGE HERO
+       HERO
        ============================================================ */
-    .biz-hero {
+    .hero {
       padding: 140px 40px 80px;
       position: relative;
       overflow: hidden;
     }
 
-    .biz-hero-glow {
+    .hero-glow {
       position: absolute;
       top: 10%;
       right: -10%;
@@ -130,7 +158,7 @@
       pointer-events: none;
     }
 
-    .biz-hero-grid {
+    .hero-grid-bg {
       position: absolute;
       inset: 0;
       background-image:
@@ -140,13 +168,13 @@
       pointer-events: none;
     }
 
-    .biz-hero-inner {
-      max-width: 800px;
+    .hero-inner {
+      max-width: 900px;
       position: relative;
       z-index: 1;
     }
 
-    .biz-hero-eyebrow {
+    .hero-eyebrow {
       font-family: var(--font-mono);
       font-size: 11px;
       letter-spacing: 3px;
@@ -157,45 +185,96 @@
       animation: fadeUp 0.6s 0.2s ease forwards;
     }
 
-    .biz-hero-title {
+    .hero-title {
       font-family: var(--font-display);
-      font-size: clamp(56px, 10vw, 120px);
+      font-size: clamp(56px, 10vw, 130px);
       line-height: 0.9;
       margin-bottom: 24px;
       opacity: 0;
       animation: fadeUp 0.7s 0.4s ease forwards;
     }
-    .biz-hero-title .t-orange { color: var(--orange); }
+    .hero-title .t-orange { color: var(--orange); }
+    .hero-title .t-outline {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(240,237,232,0.18);
+    }
 
-    .biz-hero-desc {
+    .hero-desc {
       font-size: 17px;
       font-weight: 300;
       color: var(--grey-light);
       line-height: 1.75;
-      max-width: 560px;
+      max-width: 580px;
+      margin-bottom: 36px;
       opacity: 0;
       animation: fadeUp 0.7s 0.6s ease forwards;
     }
 
-    .biz-hero-badges {
+    .hero-ctas {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 32px;
       opacity: 0;
       animation: fadeUp 0.7s 0.8s ease forwards;
     }
 
-    .biz-badge {
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 1.5px;
+      font-size: 11px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 8px 16px;
-      border: 1px solid var(--border);
-      color: var(--grey);
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
     }
-    .biz-badge strong { color: var(--white); font-weight: 400; }
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--orange);
+      color: var(--black);
+    }
+    .btn-primary:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255,77,0,0.28);
+    }
+    .btn-outline {
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 44px;
+      margin-top: 56px;
+      opacity: 0;
+      animation: fadeUp 0.7s 1s ease forwards;
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 48px;
+      line-height: 1;
+    }
+    .stat-num em { color: var(--orange); font-style: normal; }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-top: 4px;
+    }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(22px); }
@@ -203,50 +282,129 @@
     }
 
     /* ============================================================
-       PRODUCTS SECTION
+       TICKER
        ============================================================ */
-    .biz-products {
-      padding: 0 40px 96px;
+    .ticker {
+      background: var(--orange);
+      padding: 11px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .ticker-track {
+      display: inline-flex;
+      animation: tickerScroll 36s linear infinite;
+    }
+    .ticker-item {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--black);
+      font-weight: 500;
+      padding: 0 36px;
+    }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ============================================================
+       REVEAL ANIMATIONS
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+
+    /* ============================================================
+       CATEGORY SECTIONS
+       ============================================================ */
+    .cat-section {
+      padding: 96px 40px;
       max-width: 1280px;
       margin: 0 auto;
     }
 
-    .biz-section-header {
-      margin-bottom: 48px;
+    .cat-section-alt {
+      padding: 96px 40px;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .biz-grid {
+    .cat-section-alt .cat-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .cat-header { margin-bottom: 48px; }
+
+    .cat-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 0.95;
+      margin-top: 10px;
+    }
+    .cat-title em { color: var(--orange); font-style: normal; }
+
+    .cat-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--grey-light);
+      line-height: 1.75;
+      max-width: 600px;
+      margin-top: 16px;
+    }
+
+    .cat-layout {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .cat-layout-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 2px;
     }
 
     /* ============================================================
-       PRODUCT CARD (business)
+       PRODUCT CARD
        ============================================================ */
-    .biz-card {
+    .cat-card {
       background: var(--card);
       border: 1px solid var(--border);
       transition: border-color 0.3s, transform 0.3s;
       overflow: hidden;
+      cursor: pointer;
     }
-    .biz-card:hover {
+    .cat-card:hover {
       border-color: var(--orange);
       transform: translateY(-4px);
     }
 
-    .biz-card-visual {
+    .cat-card-visual {
       aspect-ratio: 16 / 10;
       background: var(--dark);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 64px;
+      font-size: 56px;
       position: relative;
       border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform 0.4s ease;
     }
+    .cat-card:hover .cat-card-visual { transform: scale(1.02); }
 
-    .biz-card-tag {
+    .cat-card-tag {
       position: absolute;
       top: 12px;
       left: 12px;
@@ -260,11 +418,9 @@
       font-weight: 500;
     }
 
-    .biz-card-body {
-      padding: 24px;
-    }
+    .cat-card-body { padding: 22px 24px; }
 
-    .biz-card-cat {
+    .cat-card-label {
       font-family: var(--font-mono);
       font-size: 9px;
       letter-spacing: 2px;
@@ -273,253 +429,262 @@
       margin-bottom: 6px;
     }
 
-    .biz-card-name {
+    .cat-card-name {
       font-family: var(--font-display);
-      font-size: 32px;
+      font-size: 28px;
       line-height: 1;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .biz-card-desc {
+    .cat-card-desc {
       font-size: 13px;
       font-weight: 300;
       color: var(--grey-light);
       line-height: 1.7;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
-    .biz-card-pricing {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .biz-price-chip {
+    .cat-card-from {
       font-family: var(--font-mono);
       font-size: 10px;
       letter-spacing: 1px;
-      padding: 6px 12px;
-      border: 1px solid var(--border);
       color: var(--grey);
-      text-align: center;
-      line-height: 1.4;
     }
-    .biz-price-chip strong {
-      display: block;
+    .cat-card-from strong {
       color: var(--white);
       font-weight: 500;
-      font-size: 11px;
+      font-size: 12px;
     }
 
-    .biz-card-cta {
-      width: 100%;
+    /* "Also available" chips */
+    .cat-also {
+      margin-top: 28px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border-dim);
+    }
+
+    .cat-also-title {
       font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 2px;
+      font-size: 9px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      padding: 14px;
-      background: transparent;
-      color: var(--white);
+      color: var(--grey);
+      margin-bottom: 14px;
+    }
+
+    .cat-also-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cat-also-chip {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 7px 14px;
       border: 1px solid var(--border);
-      font-weight: 500;
+      color: var(--grey-light);
+      background: transparent;
+      cursor: pointer;
       transition: all 0.2s;
     }
-    .biz-card-cta:hover {
-      background: var(--orange);
+    .cat-also-chip:hover {
       border-color: var(--orange);
-      color: var(--black);
+      color: var(--orange);
+      background: var(--orange-glow);
     }
 
     /* ============================================================
-       ORDER MODAL
+       INDUSTRIES SERVED
        ============================================================ */
-    .biz-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 800;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
+    .industries {
+      padding: 80px 40px;
+      border-bottom: 1px solid var(--border);
     }
-    .biz-modal-overlay.open { opacity: 1; pointer-events: all; }
 
-    .biz-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.95);
-      width: 560px;
-      max-width: 92vw;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: var(--dark);
+    .industries-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .industries-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      margin-top: 40px;
+    }
+
+    .industry-card {
+      background: var(--card);
       border: 1px solid var(--border);
-      z-index: 900;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s, transform 0.3s;
+      padding: 28px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
     }
-    .biz-modal.open {
-      opacity: 1;
-      pointer-events: all;
-      transform: translate(-50%, -50%) scale(1);
+    .industry-card:hover { border-color: var(--orange); }
+
+    .industry-icon { font-size: 32px; margin-bottom: 10px; }
+
+    .industry-name {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--grey-light);
     }
 
-    .biz-modal-header {
-      padding: 28px 32px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+    /* ============================================================
+       HOW IT WORKS
+       ============================================================ */
+    .process {
+      padding: 96px 40px;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .biz-modal-close {
-      background: none;
-      border: none;
-      color: var(--grey);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 4px;
-      transition: color 0.2s;
-    }
-    .biz-modal-close:hover { color: var(--white); }
-
-    .biz-modal-body {
-      padding: 20px 32px 32px;
+    .process-inner {
+      max-width: 1280px;
+      margin: 0 auto;
     }
 
-    .biz-modal-product-name {
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 48px;
+    }
+
+    .process-step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 32px 24px;
+    }
+
+    .step-num {
       font-family: var(--font-display);
-      font-size: 36px;
+      font-size: 52px;
       line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .biz-modal-product-cat {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
       color: var(--orange);
-      margin-bottom: 24px;
+      opacity: 0.3;
+      margin-bottom: 14px;
     }
 
-    .biz-form-group {
-      margin-bottom: 20px;
-    }
-
-    .biz-form-label {
-      display: block;
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--grey);
+    .step-title {
+      font-size: 15px;
+      font-weight: 500;
       margin-bottom: 8px;
     }
 
-    /* Quantity selector as button group */
-    .qty-options {
-      display: flex;
-      gap: 8px;
-    }
-
-    .qty-option {
-      flex: 1;
-      padding: 14px 8px;
-      text-align: center;
-      background: var(--card);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .qty-option:hover {
-      border-color: var(--orange);
-    }
-    .qty-option.selected {
-      border-color: var(--orange);
-      background: var(--orange-glow);
-    }
-
-    .qty-option-count {
-      font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1;
-      color: var(--white);
-    }
-    .qty-option.selected .qty-option-count { color: var(--orange); }
-
-    .qty-option-label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--grey);
-      margin-top: 2px;
-    }
-
-    .qty-option-price {
+    .step-desc {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--grey-light);
-      margin-top: 6px;
-    }
-    .qty-option.selected .qty-option-price { color: var(--white); }
-
-    .qty-option-per {
-      font-family: var(--font-mono);
-      font-size: 8px;
       color: var(--grey);
-      margin-top: 2px;
+      line-height: 1.6;
     }
 
-    /* Upload zone */
-    .biz-upload-zone {
-      border: 1px dashed var(--border);
-      padding: 32px;
-      text-align: center;
+    /* ============================================================
+       QUOTE FORM SECTION
+       ============================================================ */
+    .quote-section {
+      padding: 96px 40px;
+    }
+
+    .quote-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .quote-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .quote-sidebar-title {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 0.95;
+      margin-bottom: 16px;
+    }
+    .quote-sidebar-title em { color: var(--orange); font-style: normal; }
+
+    .quote-sidebar-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--grey-light);
+      line-height: 1.75;
+      margin-bottom: 36px;
+    }
+
+    .quote-info-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .quote-info-item:last-child { border-bottom: none; }
+
+    .quote-info-icon { font-size: 22px; flex-shrink: 0; }
+
+    .quote-info-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 2px;
+    }
+
+    .quote-info-value {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    /* Form box */
+    .quote-form-box {
       background: var(--card);
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative;
+      border: 1px solid var(--border);
+      padding: 36px;
     }
-    .biz-upload-zone:hover {
-      border-color: var(--orange);
-      background: var(--orange-glow);
+
+    .form-heading {
+      font-family: var(--font-display);
+      font-size: 32px;
+      margin-bottom: 6px;
     }
-    .biz-upload-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .biz-upload-icon { font-size: 28px; margin-bottom: 8px; }
-    .biz-upload-text {
+
+    .form-subheading {
       font-family: var(--font-mono);
       font-size: 10px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--grey);
-    }
-    .biz-upload-sub {
-      font-size: 11px;
-      color: var(--grey);
-      margin-top: 4px;
-    }
-    .biz-upload-filename {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--orange);
-      margin-top: 8px;
-      display: none;
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
     }
 
-    /* Text inputs in modal */
-    .biz-input,
-    .biz-textarea {
+    .form-group { margin-bottom: 18px; }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 7px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
       width: 100%;
-      background: var(--card);
+      background: var(--dark);
       border: 1px solid var(--border);
       color: var(--white);
       font-family: var(--font-body);
@@ -527,154 +692,62 @@
       padding: 11px 14px;
       outline: none;
       transition: border-color 0.2s;
+      -webkit-appearance: none;
     }
-    .biz-input:focus,
-    .biz-textarea:focus { border-color: var(--orange); }
-    .biz-input::placeholder,
-    .biz-textarea::placeholder { color: var(--grey); }
-    .biz-textarea { resize: vertical; min-height: 80px; }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus { border-color: var(--orange); }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: var(--grey); }
+    .form-textarea { resize: vertical; min-height: 96px; }
 
-    .biz-form-row {
+    .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
     }
 
-    /* Price summary */
-    /* Quantity slider (for products with qtyMode:'slider') */
-    .qty-slider-wrap {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 24px;
+    .upload-zone {
+      border: 1px dashed var(--border);
+      padding: 28px;
+      text-align: center;
+      background: var(--dark);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
     }
-
-    .qty-slider-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
+    .upload-zone:hover {
+      border-color: var(--orange);
+      background: var(--orange-glow);
     }
-
-    .qty-slider-value {
-      font-family: var(--font-display);
-      font-size: 48px;
-      line-height: 1;
-      color: var(--orange);
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
     }
-    .qty-slider-value span {
+    .upload-icon { font-size: 28px; margin-bottom: 8px; }
+    .upload-text {
       font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--grey);
-    }
-
-    .qty-slider-per-unit {
-      text-align: right;
-    }
-    .qty-slider-per-unit-price {
-      font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1;
-      color: var(--white);
-    }
-    .qty-slider-per-unit-label {
-      font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--grey);
-      margin-top: 2px;
     }
-
-    /* Custom range input styling */
-    .qty-range {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 2px;
-      background: var(--border);
-      outline: none;
-      cursor: pointer;
-      margin-bottom: 12px;
-    }
-    .qty-range::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      background: var(--orange);
-      border: 2px solid var(--black);
-      border-radius: 50%;
-      cursor: grab;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .qty-range::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-      box-shadow: 0 0 12px rgba(255,77,0,0.4);
-    }
-    .qty-range::-webkit-slider-thumb:active {
-      cursor: grabbing;
-      transform: scale(1.1);
-    }
-    .qty-range::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      background: var(--orange);
-      border: 2px solid var(--black);
-      border-radius: 50%;
-      cursor: grab;
-    }
-
-    .qty-slider-ticks {
-      display: flex;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 1px;
+    .upload-sub {
+      font-size: 11px;
       color: var(--grey);
+      margin-top: 4px;
     }
-
-    .qty-slider-tier-note {
+    .upload-filename {
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--orange);
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    /* Price summary (original) */
-    .biz-price-summary {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 0;
-      border-top: 1px solid var(--border);
       margin-top: 8px;
-      margin-bottom: 20px;
+      display: none;
     }
 
-    .biz-price-total-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--grey);
-    }
-
-    .biz-price-total {
-      font-family: var(--font-display);
-      font-size: 40px;
-      line-height: 1;
-    }
-    .biz-price-total span {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      color: var(--grey);
-    }
-
-    .biz-submit-btn {
+    .form-submit-btn {
       width: 100%;
       font-family: var(--font-mono);
       font-size: 11px;
@@ -688,12 +761,12 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.15s;
     }
-    .biz-submit-btn:hover {
+    .form-submit-btn:hover {
       background: var(--white);
       transform: translateY(-2px);
     }
 
-    .biz-submit-note {
+    .form-note {
       font-family: var(--font-mono);
       font-size: 9px;
       letter-spacing: 1px;
@@ -702,7 +775,75 @@
       margin-top: 12px;
     }
 
-    /* Toast */
+    /* ============================================================
+       CTA BANNER
+       ============================================================ */
+    .cta-banner {
+      padding: 96px 40px;
+      text-align: center;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(44px, 7vw, 88px);
+      line-height: 0.95;
+      margin-bottom: 16px;
+    }
+    .cta-title em { color: var(--orange); font-style: normal; }
+
+    .cta-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--grey-light);
+      max-width: 500px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      padding: 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+    .footer-logo em { color: var(--orange); font-style: normal; }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--grey);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--grey);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--orange); }
+
+    /* ============================================================
+       TOAST
+       ============================================================ */
     .toast {
       position: fixed;
       bottom: 28px;
@@ -732,548 +873,653 @@
     }
 
     /* ============================================================
-       HOW IT WORKS
-       ============================================================ */
-    .biz-process {
-      padding: 80px 40px;
-      background: var(--dark);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .biz-process-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .biz-process-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      margin-top: 48px;
-    }
-
-    .biz-process-step {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 32px 24px;
-      position: relative;
-    }
-
-    .biz-step-num {
-      font-family: var(--font-display);
-      font-size: 52px;
-      line-height: 1;
-      color: var(--orange);
-      opacity: 0.3;
-      margin-bottom: 14px;
-    }
-
-    .biz-step-title {
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .biz-step-desc {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--grey);
-      line-height: 1.6;
-    }
-
-    /* ============================================================
-       CTA BANNER
-       ============================================================ */
-    .biz-cta-banner {
-      padding: 80px 40px;
-      text-align: center;
-    }
-
-    .biz-cta-title {
-      font-family: var(--font-display);
-      font-size: clamp(40px, 7vw, 80px);
-      line-height: 0.95;
-      margin-bottom: 16px;
-    }
-    .biz-cta-title em { color: var(--orange); font-style: normal; }
-
-    .biz-cta-desc {
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--grey-light);
-      max-width: 480px;
-      margin: 0 auto 32px;
-    }
-
-    .biz-cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-weight: 500;
-      padding: 16px 36px;
-      background: var(--orange);
-      color: var(--black);
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .biz-cta-btn:hover {
-      background: var(--white);
-      transform: translateY(-2px);
-    }
-
-    /* ============================================================
        RESPONSIVE
        ============================================================ */
     @media (max-width: 768px) {
       nav { padding: 0 20px; }
-      .biz-hero { padding: 110px 20px 60px; }
-      .biz-products { padding: 0 20px 60px; }
-      .biz-grid { grid-template-columns: 1fr; }
-      .biz-process { padding: 60px 20px; }
-      .biz-process-grid { grid-template-columns: 1fr 1fr; }
-      .qty-options { flex-wrap: wrap; }
-      .qty-option { flex: 1 1 calc(50% - 4px); }
-      .biz-form-row { grid-template-columns: 1fr; }
-      .biz-modal { max-width: 96vw; }
-      .biz-modal-body { padding: 20px 20px 28px; }
-      .biz-modal-header { padding: 20px 20px 0; }
-      .biz-cta-banner { padding: 60px 20px; }
+      .nav-right-group { gap: 12px; }
+      .back-link { display: none; }
+
+      .hero { padding: 110px 20px 60px; }
+      .hero-stats { gap: 28px; flex-wrap: wrap; }
+
+      .cat-section,
+      .quote-section { padding: 60px 20px; }
+
+      .cat-section-alt { padding: 60px 20px; }
+
+      .cat-layout,
+      .cat-layout-3,
+      .quote-layout { grid-template-columns: 1fr; gap: 20px; }
+
+      .industries { padding: 60px 20px; }
+      .industries-grid { grid-template-columns: repeat(3, 1fr); }
+
+      .process { padding: 60px 20px; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+
+      .form-row { grid-template-columns: 1fr; }
+
+      .cta-banner { padding: 60px 20px; }
+
+      footer {
+        padding: 30px 20px;
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .quote-layout { gap: 40px; }
     }
 
     @media (max-width: 480px) {
-      .biz-process-grid { grid-template-columns: 1fr; }
+      .hero-stats { flex-direction: column; gap: 20px; }
+      .industries-grid { grid-template-columns: repeat(2, 1fr); }
+      .process-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
   <nav>
-    <div class="nav-logo">ibz<em>3d</em></div>
-    <a class="back-link" onclick="history.back()">← Back to Shop</a>
+    <a class="nav-logo" href="index.html">ibz<em>3d</em>.ca</a>
+    <div class="nav-right-group">
+      <a class="back-link" href="index.html">← Back to Shop</a>
+      <button class="nav-quote-btn" onclick="scrollToQuote()">Get a Quote</button>
+    </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="biz-hero">
-    <div class="biz-hero-grid"></div>
-    <div class="biz-hero-glow"></div>
-    <div class="biz-hero-inner">
-      <div class="biz-hero-eyebrow">For Businesses · Bulk Orders · Custom Branding</div>
-      <h1 class="biz-hero-title">
-        BRANDED<br><span class="t-orange">PRODUCTS</span>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">For Businesses · Bulk Orders · Custom Branding</div>
+      <h1 class="hero-title">
+        YOUR <span class="t-orange">BRAND</span><br>
+        <span class="t-outline">OUR CRAFT</span>
       </h1>
-      <p class="biz-hero-desc">
-        Custom-branded promotional products for your business. Your logo, your brand — 
-        handcrafted in Ontario with bulk pricing that makes sense.
+      <p class="hero-desc">
+        Branded promotional products, signage, and custom items — all handcrafted
+        in Milton, Ontario. Your logo, your colours, your vision. From 10 units to 1,000.
       </p>
-      <div class="biz-hero-badges">
-        <div class="biz-badge">MOQ: <strong>10 Units</strong></div>
-        <div class="biz-badge">Turnaround: <strong>5–7 Days</strong></div>
-        <div class="biz-badge">Branding: <strong>3D Logo Inlay</strong></div>
-        <div class="biz-badge">Ships: <strong>Canada-Wide</strong></div>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" onclick="scrollToQuote()">Get a Quote →</button>
+        <button class="btn btn-outline" onclick="document.getElementById('cat-1').scrollIntoView({behavior:'smooth'})">Browse Categories</button>
       </div>
-    </div>
-  </section>
-
-  <!-- PRODUCTS -->
-  <section class="biz-products">
-    <div class="biz-section-header">
-      <div class="label" style="margin-bottom:8px">// Branded Products</div>
-      <h2 class="display" style="font-size:clamp(36px,5vw,64px)">SELECT YOUR<br>PRODUCT</h2>
-    </div>
-
-    <div class="biz-grid" id="biz-grid"></div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="biz-process">
-    <div class="biz-process-inner">
-      <div class="label" style="margin-bottom:8px">// How It Works</div>
-      <h2 class="display" style="font-size:clamp(32px,4vw,52px)">ORDER IN<br>4 STEPS</h2>
-
-      <div class="biz-process-grid">
-        <div class="biz-process-step">
-          <div class="biz-step-num">01</div>
-          <div class="biz-step-title">Choose Product & Quantity</div>
-          <div class="biz-step-desc">Select from our branded product range and pick your volume tier.</div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">10<em>+</em></div>
+          <div class="stat-label">Min Order Qty</div>
         </div>
-        <div class="biz-process-step">
-          <div class="biz-step-num">02</div>
-          <div class="biz-step-title">Upload Your Branding</div>
-          <div class="biz-step-desc">Upload your logo as PNG, JPEG, or PDF. We handle the rest.</div>
+        <div>
+          <div class="stat-num">5<em>–7</em></div>
+          <div class="stat-label">Day Turnaround</div>
         </div>
-        <div class="biz-process-step">
-          <div class="biz-step-num">03</div>
-          <div class="biz-step-title">We Print & Brand</div>
-          <div class="biz-step-desc">Each piece is handcrafted with your 3D logo inlay. 5–7 day production.</div>
+        <div>
+          <div class="stat-num">3D</div>
+          <div class="stat-label">Logo Inlay</div>
         </div>
-        <div class="biz-process-step">
-          <div class="biz-step-num">04</div>
-          <div class="biz-step-title">Delivered to You</div>
-          <div class="biz-step-desc">Shipped anywhere in Canada. Local pickup available in Milton, ON.</div>
+        <div>
+          <div class="stat-num">🇨🇦</div>
+          <div class="stat-label">Ships Canada-Wide</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="biz-cta-banner">
-    <div class="label" style="margin-bottom:14px">// Need Something Custom?</div>
-    <h2 class="biz-cta-title">NOT SEEING<br>WHAT YOU <em>NEED?</em></h2>
-    <p class="biz-cta-desc">
-      We can create any branded promotional product. Reach out and tell us what you're looking for.
-    </p>
-    <a class="biz-cta-btn" href="mailto:hello@ibz3d.ca">Get a Custom Quote →</a>
-  </section>
 
-  <!-- ORDER MODAL -->
-  <div class="biz-modal-overlay" id="biz-modal-overlay" onclick="closeBizModal()"></div>
-  <div class="biz-modal" id="biz-modal">
-    <div class="biz-modal-header">
-      <div>
-        <div class="biz-modal-product-name" id="biz-modal-name">Product</div>
-        <div class="biz-modal-product-cat" id="biz-modal-cat">Branded Products</div>
-      </div>
-      <button class="biz-modal-close" onclick="closeBizModal()">✕</button>
-    </div>
-    <div class="biz-modal-body">
-
-      <!-- Quantity -->
-      <div class="biz-form-group">
-        <div class="biz-form-label">Select Quantity</div>
-        <div class="qty-options" id="qty-options"></div>
-      </div>
-
-      <!-- Upload -->
-      <div class="biz-form-group">
-        <div class="biz-form-label">Upload Your Logo / Branding</div>
-        <div class="biz-upload-zone" id="biz-upload-zone">
-          <input type="file" accept=".png,.jpg,.jpeg,.pdf" onchange="handleBizFile(this)">
-          <div class="biz-upload-icon">📎</div>
-          <div class="biz-upload-text">Drop file or click to upload</div>
-          <div class="biz-upload-sub">PNG, JPEG, or PDF — max 25MB</div>
-          <div class="biz-upload-filename" id="biz-filename"></div>
-        </div>
-      </div>
-
-      <!-- Contact info -->
-      <div class="biz-form-group">
-        <div class="biz-form-label">Your Details</div>
-        <div class="biz-form-row" style="margin-bottom:12px">
-          <input class="biz-input" type="text" placeholder="Name" id="biz-name">
-          <input class="biz-input" type="email" placeholder="Email" id="biz-email">
-        </div>
-        <input class="biz-input" type="text" placeholder="Company Name (optional)" id="biz-company" style="margin-bottom:12px">
-        <textarea class="biz-textarea" placeholder="Special instructions (optional)" id="biz-notes"></textarea>
-      </div>
-
-      <!-- Price summary -->
-      <div class="biz-price-summary">
-        <div class="biz-price-total-label">Estimated Total</div>
-        <div class="biz-price-total" id="biz-total">$0 <span>CAD</span></div>
-      </div>
-
-      <button class="biz-submit-btn" onclick="submitBizOrder()">Submit Order Request →</button>
-      <div class="biz-submit-note">We'll confirm pricing and timeline within 2 hours · Mon–Sat</div>
+  <!-- ============================================================
+       TICKER
+       ============================================================ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">Custom Branding ◆</span>
+      <span class="ticker-item">Bulk Pricing ◆</span>
+      <span class="ticker-item">3D Logo Inlay ◆</span>
+      <span class="ticker-item">Handcrafted in Ontario ◆</span>
+      <span class="ticker-item">Signage & Displays ◆</span>
+      <span class="ticker-item">Promo Products ◆</span>
+      <span class="ticker-item">Restaurants · Realtors · Events ◆</span>
+      <span class="ticker-item">Custom Branding ◆</span>
+      <span class="ticker-item">Bulk Pricing ◆</span>
+      <span class="ticker-item">3D Logo Inlay ◆</span>
+      <span class="ticker-item">Handcrafted in Ontario ◆</span>
+      <span class="ticker-item">Signage & Displays ◆</span>
+      <span class="ticker-item">Promo Products ◆</span>
+      <span class="ticker-item">Restaurants · Realtors · Events ◆</span>
     </div>
   </div>
 
-  <!-- TOAST -->
+
+  <!-- ============================================================
+       CATEGORY 1 — SIGNAGE & DISPLAYS
+       ============================================================ -->
+  <section class="cat-section" id="cat-1">
+    <div class="cat-header reveal">
+      <div class="label">// 01 — Signage &amp; Displays</div>
+      <h2 class="cat-title">BRANDED<br><em>SIGNAGE</em></h2>
+      <p class="cat-desc">
+        3D printed lobby signs, counter displays, QR code stands, directional signage, and
+        event nameplates. Wall-mount or freestanding — any size, any colour, your logo in 3D.
+      </p>
+    </div>
+
+    <div class="cat-layout reveal reveal-d1">
+      <div class="cat-card" onclick="scrollToQuote()">
+        <div class="cat-card-visual">
+          <span>🪧</span>
+          <div class="cat-card-tag">CUSTOM</div>
+        </div>
+        <div class="cat-card-body">
+          <div class="cat-card-label">Signage</div>
+          <div class="cat-card-name">BRANDED 3D SIGN</div>
+          <div class="cat-card-desc">Custom 3D printed signage with your logo. Wall-mount or freestanding. Lobby signs, café boards, directional signs — any size.</div>
+          <div class="cat-card-from">From <strong>$22/unit</strong> at 100 units</div>
+        </div>
+      </div>
+      <div class="cat-card" onclick="scrollToQuote()">
+        <div class="cat-card-visual">
+          <span>📱</span>
+          <div class="cat-card-tag">B2B</div>
+        </div>
+        <div class="cat-card-body">
+          <div class="cat-card-label">Display</div>
+          <div class="cat-card-name">BRANDED QR STAND</div>
+          <div class="cat-card-desc">Freestanding QR code display with your brand. Restaurant tables, reception desks, retail counters, trade shows. Sturdy base, premium finish.</div>
+          <div class="cat-card-from">From <strong>$17/unit</strong> at 100 units</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-also reveal reveal-d2">
+      <div class="cat-also-title">Also available in this category</div>
+      <div class="cat-also-list">
+        <button class="cat-also-chip" onclick="scrollToQuote()">Table Numbers</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Menu Holders</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Event Nameplates</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Directional Signs</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Café Boards</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">A-Frame Stands</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CATEGORY 2 — DESK & OFFICE
+       ============================================================ -->
+  <section class="cat-section-alt" id="cat-2">
+    <div class="cat-inner">
+      <div class="cat-header reveal">
+        <div class="label">// 02 — Desk &amp; Office</div>
+        <h2 class="cat-title">BRANDED<br><em>OFFICE</em></h2>
+        <p class="cat-desc">
+          Your logo on items people use every day. Business card holders, phone stands,
+          pen holders, and cable organizers — branded for reception desks, co-working spaces, and client gifts.
+        </p>
+      </div>
+
+      <div class="cat-layout-3 reveal reveal-d1">
+        <div class="cat-card" onclick="scrollToQuote()">
+          <div class="cat-card-visual">
+            <span>💼</span>
+            <div class="cat-card-tag">POPULAR</div>
+          </div>
+          <div class="cat-card-body">
+            <div class="cat-card-label">Office</div>
+            <div class="cat-card-name">BUSINESS CARD HOLDER</div>
+            <div class="cat-card-desc">Your logo molded into the stand. Perfect for reception desks, trade shows, and client meetings.</div>
+            <div class="cat-card-from">From <strong>$8/unit</strong> at 100 units</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="scrollToQuote()">
+          <div class="cat-card-visual">
+            <span>📲</span>
+          </div>
+          <div class="cat-card-body">
+            <div class="cat-card-label">Office</div>
+            <div class="cat-card-name">BRANDED PHONE STAND</div>
+            <div class="cat-card-desc">Counter or desk display stand for phones and tablets. Logo on the front face — great for POS or reception.</div>
+            <div class="cat-card-from">From <strong>$10/unit</strong> at 100 units</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="scrollToQuote()">
+          <div class="cat-card-visual">
+            <span>✏️</span>
+          </div>
+          <div class="cat-card-body">
+            <div class="cat-card-label">Office</div>
+            <div class="cat-card-name">BRANDED PEN HOLDER</div>
+            <div class="cat-card-desc">Hexagonal or custom-shape pen holder with 3D logo inlay. Sits on any desk — a daily brand reminder.</div>
+            <div class="cat-card-from">From <strong>$9/unit</strong> at 100 units</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-also reveal reveal-d2">
+        <div class="cat-also-title">Also available in this category</div>
+        <div class="cat-also-list">
+          <button class="cat-also-chip" onclick="scrollToQuote()">Cable Organizers</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Headphone Stands</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Laptop Risers</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Desk Organizers</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Webcam Covers</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CATEGORY 3 — RESTAURANT & HOSPITALITY
+       ============================================================ -->
+  <section class="cat-section" id="cat-3">
+    <div class="cat-header reveal">
+      <div class="label">// 03 — Restaurant &amp; Hospitality</div>
+      <h2 class="cat-title">BRANDED FOR<br><em>HOSPITALITY</em></h2>
+      <p class="cat-desc">
+        Branded items designed for restaurants, cafés, bars, and hotels.
+        Napkin holders, tip jar toppers, table number stands — your logo on everything your customers touch.
+      </p>
+    </div>
+
+    <div class="cat-layout reveal reveal-d1">
+      <div class="cat-card" onclick="scrollToQuote()">
+        <div class="cat-card-visual">
+          <span>🍽️</span>
+          <div class="cat-card-tag">POPULAR</div>
+        </div>
+        <div class="cat-card-body">
+          <div class="cat-card-label">Hospitality</div>
+          <div class="cat-card-name">BRANDED NAPKIN HOLDER</div>
+          <div class="cat-card-desc">Your logo on the side panel. Fits standard napkins. Durable, easy to clean, and a constant brand touchpoint on every table.</div>
+          <div class="cat-card-from">From <strong>$12/unit</strong> at 100 units</div>
+        </div>
+      </div>
+      <div class="cat-card" onclick="scrollToQuote()">
+        <div class="cat-card-visual">
+          <span>🪙</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="cat-card-label">Hospitality</div>
+          <div class="cat-card-name">BRANDED TIP JAR TOPPER</div>
+          <div class="cat-card-desc">Custom lid with your logo and "Thank You" text. Fits standard jars. A branded upgrade to a daily essential.</div>
+          <div class="cat-card-from">From <strong>$8/unit</strong> at 100 units</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-also reveal reveal-d2">
+      <div class="cat-also-title">Also available in this category</div>
+      <div class="cat-also-list">
+        <button class="cat-also-chip" onclick="scrollToQuote()">Table Number Stands</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Menu Card Holders</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Bill Presenters</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Straw Dispensers</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Toothpick Holders</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Coasters</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CATEGORY 4 — PROMO GIVEAWAYS
+       ============================================================ -->
+  <section class="cat-section-alt" id="cat-4">
+    <div class="cat-inner">
+      <div class="cat-header reveal">
+        <div class="label">// 04 — Promo Giveaways</div>
+        <h2 class="cat-title">BRANDED<br><em>GIVEAWAYS</em></h2>
+        <p class="cat-desc">
+          Small, high-impact items people actually keep. QR keychains, bottle openers,
+          fridge magnets, bookmarks — branded and bulk-ready for events, open houses, and client gifts.
+        </p>
+      </div>
+
+      <div class="cat-layout-3 reveal reveal-d1">
+        <div class="cat-card" onclick="scrollToQuote()">
+          <div class="cat-card-visual">
+            <span>🔑</span>
+            <div class="cat-card-tag">POPULAR</div>
+          </div>
+          <div class="cat-card-body">
+            <div class="cat-card-label">Promo</div>
+            <div class="cat-card-name">QR CODE KEYCHAIN</div>
+            <div class="cat-card-desc">Custom QR code keychain with your 3D logo. Link to your website, menu, socials — perfect for restaurants, realtors, events.</div>
+            <div class="cat-card-from">From <strong>$8/unit</strong> at 100 units</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="scrollToQuote()">
+          <div class="cat-card-visual">
+            <span>🍺</span>
+          </div>
+          <div class="cat-card-body">
+            <div class="cat-card-label">Promo</div>
+            <div class="cat-card-name">BRANDED BOTTLE OPENER</div>
+            <div class="cat-card-desc">Flat or keychain-style bottle opener with your logo. A useful giveaway that stays in pockets and on keyrings.</div>
+            <div class="cat-card-from">From <strong>$6/unit</strong> at 100 units</div>
+          </div>
+        </div>
+        <div class="cat-card" onclick="scrollToQuote()">
+          <div class="cat-card-visual">
+            <span>🧲</span>
+          </div>
+          <div class="cat-card-body">
+            <div class="cat-card-label">Promo</div>
+            <div class="cat-card-name">BRANDED FRIDGE MAGNET</div>
+            <div class="cat-card-desc">3D logo magnet in full colour. Sticks to fridges, filing cabinets, whiteboards — daily brand visibility.</div>
+            <div class="cat-card-from">From <strong>$5/unit</strong> at 100 units</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-also reveal reveal-d2">
+        <div class="cat-also-title">Also available in this category</div>
+        <div class="cat-also-list">
+          <button class="cat-also-chip" onclick="scrollToQuote()">Luggage Tags</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Bookmarks</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Coasters</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Cord Wraps</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Earbud Holders</button>
+          <button class="cat-also-chip" onclick="scrollToQuote()">Branded Plant Pots</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CATEGORY 5 — EVENTS & RECOGNITION
+       ============================================================ -->
+  <section class="cat-section" id="cat-5">
+    <div class="cat-header reveal">
+      <div class="label">// 05 — Events &amp; Recognition</div>
+      <h2 class="cat-title">EVENTS &amp;<br><em>AWARDS</em></h2>
+      <p class="cat-desc">
+        Conference badge holders, event nameplates, mini award trophies, and recognition pieces.
+        Custom per client — celebrate your team and your brand at the same time.
+      </p>
+    </div>
+
+    <div class="cat-layout reveal reveal-d1">
+      <div class="cat-card" onclick="scrollToQuote()">
+        <div class="cat-card-visual">
+          <span>🏆</span>
+          <div class="cat-card-tag">CUSTOM</div>
+        </div>
+        <div class="cat-card-body">
+          <div class="cat-card-label">Recognition</div>
+          <div class="cat-card-name">MINI AWARD TROPHY</div>
+          <div class="cat-card-desc">"Top Seller Q3", "Employee of the Month" — custom recognition pieces with your branding. Desktop-sized, premium finish.</div>
+          <div class="cat-card-from">From <strong>$15/unit</strong> at 50 units</div>
+        </div>
+      </div>
+      <div class="cat-card" onclick="scrollToQuote()">
+        <div class="cat-card-visual">
+          <span>🎫</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="cat-card-label">Events</div>
+          <div class="cat-card-name">BRANDED BADGE HOLDER</div>
+          <div class="cat-card-desc">Custom badge holder clips for conferences, trade shows, and events. Logo on every badge — your brand on every attendee.</div>
+          <div class="cat-card-from">From <strong>$6/unit</strong> at 100 units</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-also reveal reveal-d2">
+      <div class="cat-also-title">Also available in this category</div>
+      <div class="cat-also-list">
+        <button class="cat-also-chip" onclick="scrollToQuote()">Event Nameplates</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Open House Stands</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Branded Luggage Tags</button>
+        <button class="cat-also-chip" onclick="scrollToQuote()">Speaker Podium Signs</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       INDUSTRIES SERVED
+       ============================================================ -->
+  <section class="industries reveal">
+    <div class="industries-inner">
+      <div class="label" style="margin-bottom:8px">// Who We Serve</div>
+      <h2 class="display" style="font-size:clamp(32px,4vw,52px)">INDUSTRIES</h2>
+
+      <div class="industries-grid">
+        <div class="industry-card">
+          <div class="industry-icon">🍕</div>
+          <div class="industry-name">Restaurants</div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-icon">🏠</div>
+          <div class="industry-name">Realtors</div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-icon">🎪</div>
+          <div class="industry-name">Events</div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-icon">🏢</div>
+          <div class="industry-name">Corporate</div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-icon">☕</div>
+          <div class="industry-name">Cafés &amp; Bars</div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-icon">🏨</div>
+          <div class="industry-name">Hotels</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       HOW IT WORKS
+       ============================================================ -->
+  <section class="process">
+    <div class="process-inner">
+      <div class="reveal">
+        <div class="label" style="margin-bottom:8px">// How It Works</div>
+        <h2 class="display" style="font-size:clamp(32px,4vw,52px)">ORDER IN<br>4 STEPS</h2>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step reveal reveal-d1">
+          <div class="step-num">01</div>
+          <div class="step-title">Tell Us What You Need</div>
+          <div class="step-desc">Pick a category, describe your idea, or just tell us the problem — we'll figure out the product.</div>
+        </div>
+        <div class="process-step reveal reveal-d2">
+          <div class="step-num">02</div>
+          <div class="step-title">Upload Your Branding</div>
+          <div class="step-desc">Send your logo as PNG, JPEG, or PDF. We handle the 3D conversion and mockup.</div>
+        </div>
+        <div class="process-step reveal reveal-d3">
+          <div class="step-num">03</div>
+          <div class="step-title">We Craft It</div>
+          <div class="step-desc">Each piece is handcrafted with your 3D logo inlay. 5–7 day production on most orders.</div>
+        </div>
+        <div class="process-step reveal reveal-d4">
+          <div class="step-num">04</div>
+          <div class="step-title">Delivered to You</div>
+          <div class="step-desc">Local pickup in Milton, ON or shipped anywhere in Canada. Bulk orders get priority shipping.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       QUOTE FORM
+       ============================================================ -->
+  <section class="quote-section" id="quote">
+    <div class="quote-inner">
+      <div class="quote-layout">
+        <!-- Left: info -->
+        <div class="reveal">
+          <div class="label" style="margin-bottom:10px">// Get Started</div>
+          <h2 class="quote-sidebar-title">TELL US<br>WHAT YOU <em>NEED</em></h2>
+          <p class="quote-sidebar-desc">
+            Don't see exactly what you're looking for? That's the point — everything is custom.
+            Tell us your idea, your quantity, and your brand. We'll handle the rest.
+          </p>
+
+          <div>
+            <div class="quote-info-item">
+              <div class="quote-info-icon">⏱️</div>
+              <div>
+                <div class="quote-info-label">Response Time</div>
+                <div class="quote-info-value">Within 2 hours · Mon–Sat</div>
+              </div>
+            </div>
+            <div class="quote-info-item">
+              <div class="quote-info-icon">📦</div>
+              <div>
+                <div class="quote-info-label">Minimum Order</div>
+                <div class="quote-info-value">10 units per product</div>
+              </div>
+            </div>
+            <div class="quote-info-item">
+              <div class="quote-info-icon">🚚</div>
+              <div>
+                <div class="quote-info-label">Production</div>
+                <div class="quote-info-value">5–7 days · Rush available</div>
+              </div>
+            </div>
+            <div class="quote-info-item">
+              <div class="quote-info-icon">📍</div>
+              <div>
+                <div class="quote-info-label">Location</div>
+                <div class="quote-info-value">Milton, Ontario · Ships Canada-wide</div>
+              </div>
+            </div>
+            <div class="quote-info-item">
+              <div class="quote-info-icon">📧</div>
+              <div>
+                <div class="quote-info-label">Prefer Email?</div>
+                <div class="quote-info-value"><a href="mailto:hello@ibz3d.ca" style="color:var(--orange)">hello@ibz3d.ca</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: form -->
+        <div class="quote-form-box reveal reveal-d1">
+          <div class="form-heading">REQUEST A QUOTE</div>
+          <div class="form-subheading">We reply within 2 hours · No obligation</div>
+
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" placeholder="Jane Smith" id="q-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" placeholder="jane@company.com" id="q-email">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Company</label>
+              <input class="form-input" type="text" placeholder="Optional" id="q-company">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quantity (approx)</label>
+              <input class="form-input" type="text" placeholder="e.g. 50" id="q-qty">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product Category</label>
+            <select class="form-select" id="q-category">
+              <option value="">Select a category...</option>
+              <option>Signage &amp; Displays</option>
+              <option>Desk &amp; Office</option>
+              <option>Restaurant &amp; Hospitality</option>
+              <option>Promo Giveaways</option>
+              <option>Events &amp; Recognition</option>
+              <option>Something Else / Custom</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tell Us What You Need</label>
+            <textarea class="form-textarea" id="q-desc" placeholder="Describe your idea, the product you want, how you'll use it, or any details that help us quote accurately..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Upload Logo / Reference <span style="color:var(--grey); font-size:8px">(Optional)</span></label>
+            <div class="upload-zone">
+              <input type="file" accept=".png,.jpg,.jpeg,.pdf,.svg" onchange="handleFileUpload(this)">
+              <div class="upload-icon">📎</div>
+              <div class="upload-text">Drop file or click to upload</div>
+              <div class="upload-sub">PNG, JPEG, PDF, or SVG — max 25MB</div>
+              <div class="upload-filename" id="upload-filename"></div>
+            </div>
+          </div>
+          <button class="form-submit-btn" onclick="submitQuote()">Send Quote Request →</button>
+          <div class="form-note">No spam · No obligation · We'll follow up with pricing and mockup options</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CTA BANNER
+       ============================================================ -->
+  <section class="cta-banner">
+    <div class="reveal">
+      <div class="label" style="margin-bottom:14px">// Ready?</div>
+      <h2 class="cta-title">YOUR BRAND<br><em>EVERYWHERE</em></h2>
+      <p class="cta-desc">
+        From a 10-unit test run to a 1,000-piece corporate order — we make it happen.
+        Handcrafted in Milton, shipped across Canada.
+      </p>
+      <button class="btn btn-primary" onclick="scrollToQuote()" style="font-size:12px; padding:18px 40px">Get a Quote →</button>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="footer-logo">ibz<em>3d</em>.ca</div>
+    <div class="footer-copy">© 2025 ibz3d.ca · Milton, Ontario</div>
+    <div class="footer-links">
+      <a href="index.html">Shop</a>
+      <a href="mailto:hello@ibz3d.ca">Contact</a>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       TOAST
+       ============================================================ -->
   <div class="toast" id="toast">
     <div class="toast-dot"></div>
     <span id="toast-msg">Sent!</span>
   </div>
 
 
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
   <script>
-    /* ============================================================
-       BUSINESS PRODUCT DATA
-       ============================================================ */
-    const BIZ_PRODUCTS = [
-      {
-        id: 'biz-1',
-        name: 'QR Code Key Chain',
-        subtitle: 'with 3D Logo',
-        category: 'Branded Promo',
-        emoji: '🔑',
-        tag: 'POPULAR',
-        desc: 'Custom QR code key chain with your 3D logo inlay. Link the QR to your website, menu, socials, or any URL. Perfect for restaurants, realtors, and events.',
-        pricing: [
-          { qty: 10,  price: 15, total: 150  },
-          { qty: 25,  price: 12, total: 300  },
-          { qty: 50,  price: 10, total: 500  },
-          { qty: 100, price: 8,  total: 800  },
-        ]
-      },
-      {
-        id: 'biz-2',
-        name: 'Branded QR Code Stand',
-        subtitle: 'Desk / Counter Display',
-        category: 'Branded Signage',
-        emoji: '📱',
-        tag: 'B2B',
-        desc: 'Freestanding QR code display with your brand and logo. Ideal for restaurant tables, reception desks, retail counters, and trade shows. Sturdy base, premium finish.',
-        qtyMode: 'slider',          // <-- uses a 1–100 slider instead of fixed tier buttons
-        sliderMin: 1,
-        sliderMax: 100,
-        // Tiered pricing: price/unit drops at higher quantities
-        priceTiers: [
-          { upTo: 9,   price: 32 },  // 1–9 units
-          { upTo: 24,  price: 28 },  // 10–24
-          { upTo: 49,  price: 24 },  // 25–49
-          { upTo: 99,  price: 20 },  // 50–99
-          { upTo: 100, price: 17 },  // 100
-        ],
-        pricing: [
-          { qty: 10,  price: 28, total: 280  },
-          { qty: 25,  price: 24, total: 600  },
-          { qty: 50,  price: 20, total: 1000 },
-          { qty: 100, price: 17, total: 1700 },
-        ]
-      },
-      {
-        id: 'biz-3',
-        name: 'Branded Sign',
-        subtitle: '3D Logo Signage',
-        category: 'Branded Signage',
-        emoji: '🪧',
-        tag: 'CUSTOM',
-        desc: 'Custom 3D printed signage with your logo and branding. Wall-mount or freestanding options. Lobby signs, café boards, directional signs, event nameplates — any size, any colour.',
-        pricing: [
-          { qty: 10,  price: 35, total: 350  },
-          { qty: 25,  price: 30, total: 750  },
-          { qty: 50,  price: 26, total: 1300 },
-          { qty: 100, price: 22, total: 2200 },
-        ]
-      }
-    ];
-
-
-    /* ============================================================
-       RENDER PRODUCT CARDS
-       ============================================================ */
-    function renderBizGrid() {
-      const grid = document.getElementById('biz-grid');
-      grid.innerHTML = BIZ_PRODUCTS.map(p => {
-        // For slider products, show a price range instead of individual tier chips
-        let pricingHtml;
-        if (p.qtyMode === 'slider') {
-          const minPrice = p.priceTiers[p.priceTiers.length - 1].price;
-          const maxPrice = p.priceTiers[0].price;
-          pricingHtml = `
-            <div class="biz-card-pricing">
-              <div class="biz-price-chip">
-                1–100 units
-                <strong>$${minPrice}–$${maxPrice}/ea</strong>
-              </div>
-              <div class="biz-price-chip">
-                Quantity
-                <strong>You Choose</strong>
-              </div>
-            </div>`;
-        } else {
-          pricingHtml = `
-            <div class="biz-card-pricing">
-              ${p.pricing.map(t => `
-                <div class="biz-price-chip">
-                  ${t.qty} units
-                  <strong>$${t.price}/ea</strong>
-                </div>
-              `).join('')}
-            </div>`;
-        }
-
-        return `
-        <div class="biz-card" onclick="openBizModal('${p.id}')">
-          <div class="biz-card-visual">
-            <span style="font-size:64px">${p.emoji}</span>
-            <div class="biz-card-tag">${p.tag}</div>
-          </div>
-          <div class="biz-card-body">
-            <div class="biz-card-cat">${p.category}</div>
-            <div class="biz-card-name">${p.name}</div>
-            <div class="biz-card-desc">${p.desc}</div>
-            ${pricingHtml}
-            <button class="biz-card-cta">Configure & Order →</button>
-          </div>
-        </div>`;
-      }).join('');
+    /* ── Scroll to quote section ── */
+    function scrollToQuote() {
+      document.getElementById('quote').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-
-    /* ============================================================
-       MODAL LOGIC
-       ============================================================ */
-    let activeProduct = null;
-    let selectedQtyIndex = 0;
-    let sliderQty = 1;            // tracks current slider value for slider-mode products
-
-    /* Helper: get per-unit price from tiered pricing */
-    function getTierPrice(product, qty) {
-      for (const tier of product.priceTiers) {
-        if (qty <= tier.upTo) return tier.price;
-      }
-      return product.priceTiers[product.priceTiers.length - 1].price;
-    }
-
-    /* Helper: get the tier label (e.g. "25–49 units: $24/ea") */
-    function getTierLabel(product, qty) {
-      const tiers = product.priceTiers;
-      for (let i = 0; i < tiers.length; i++) {
-        const from = i === 0 ? 1 : tiers[i - 1].upTo + 1;
-        if (qty <= tiers[i].upTo) {
-          return from + '–' + tiers[i].upTo + ' units tier → $' + tiers[i].price + '/ea';
-        }
-      }
-      return '';
-    }
-
-    function openBizModal(id) {
-      activeProduct = BIZ_PRODUCTS.find(p => p.id === id);
-      if (!activeProduct) return;
-
-      selectedQtyIndex = 0;
-      sliderQty = activeProduct.sliderMin || 1;
-
-      document.getElementById('biz-modal-name').textContent = activeProduct.name;
-      document.getElementById('biz-modal-cat').textContent = activeProduct.category + ' · ' + activeProduct.subtitle;
-
-      const qtyContainer = document.getElementById('qty-options');
-
-      // ── SLIDER MODE ──
-      if (activeProduct.qtyMode === 'slider') {
-        const min = activeProduct.sliderMin || 1;
-        const max = activeProduct.sliderMax || 100;
-        const initPrice = getTierPrice(activeProduct, min);
-
-        qtyContainer.innerHTML = `
-          <div class="qty-slider-wrap" style="width:100%">
-            <div class="qty-slider-top">
-              <div class="qty-slider-value">
-                <span id="slider-qty-display">${min}</span> <span>units</span>
-              </div>
-              <div class="qty-slider-per-unit">
-                <div class="qty-slider-per-unit-price" id="slider-per-unit">$${initPrice}</div>
-                <div class="qty-slider-per-unit-label">Per Unit</div>
-              </div>
-            </div>
-
-            <input type="range" class="qty-range" id="qty-range"
-              min="${min}" max="${max}" value="${min}" step="1"
-              oninput="onSliderChange(this.value)">
-
-            <div class="qty-slider-ticks">
-              <span>${min}</span>
-              <span>25</span>
-              <span>50</span>
-              <span>75</span>
-              <span>${max}</span>
-            </div>
-
-            <div class="qty-slider-tier-note" id="slider-tier-note">
-              ${getTierLabel(activeProduct, min)}
-            </div>
-          </div>
-        `;
-      }
-      // ── BUTTON MODE (default) ──
-      else {
-        qtyContainer.innerHTML = activeProduct.pricing.map((t, i) => `
-          <div class="qty-option ${i === 0 ? 'selected' : ''}" onclick="selectQty(${i})">
-            <div class="qty-option-count">${t.qty}</div>
-            <div class="qty-option-label">units</div>
-            <div class="qty-option-price">$${t.total}</div>
-            <div class="qty-option-per">$${t.price}/ea</div>
-          </div>
-        `).join('');
-      }
-
-      updateBizTotal();
-
-      // Reset upload
-      document.getElementById('biz-filename').style.display = 'none';
-      document.getElementById('biz-filename').textContent = '';
-
-      document.getElementById('biz-modal-overlay').classList.add('open');
-      document.getElementById('biz-modal').classList.add('open');
-    }
-
-    function closeBizModal() {
-      document.getElementById('biz-modal-overlay').classList.remove('open');
-      document.getElementById('biz-modal').classList.remove('open');
-    }
-
-    function selectQty(index) {
-      selectedQtyIndex = index;
-      document.querySelectorAll('.qty-option').forEach((el, i) => {
-        el.classList.toggle('selected', i === index);
-      });
-      updateBizTotal();
-    }
-
-    /* Called on every slider drag */
-    function onSliderChange(val) {
-      sliderQty = parseInt(val);
-      const price = getTierPrice(activeProduct, sliderQty);
-      const total = sliderQty * price;
-
-      document.getElementById('slider-qty-display').textContent = sliderQty;
-      document.getElementById('slider-per-unit').textContent = '$' + price;
-      document.getElementById('slider-tier-note').textContent = getTierLabel(activeProduct, sliderQty);
-      document.getElementById('biz-total').innerHTML = '$' + total + ' <span>CAD</span>';
-    }
-
-    function updateBizTotal() {
-      if (!activeProduct) return;
-
-      if (activeProduct.qtyMode === 'slider') {
-        const price = getTierPrice(activeProduct, sliderQty);
-        const total = sliderQty * price;
-        document.getElementById('biz-total').innerHTML = '$' + total + ' <span>CAD</span>';
-      } else {
-        const tier = activeProduct.pricing[selectedQtyIndex];
-        document.getElementById('biz-total').innerHTML = '$' + tier.total + ' <span>CAD</span>';
-      }
-    }
-
-    function handleBizFile(input) {
-      if (input.files && input.files[0]) {
-        const nameEl = document.getElementById('biz-filename');
-        nameEl.textContent = '✓ ' + input.files[0].name;
-        nameEl.style.display = 'block';
-        showToast(input.files[0].name + ' attached!');
-      }
-    }
-
-    function submitBizOrder() {
-      const name = document.getElementById('biz-name').value.trim();
-      const email = document.getElementById('biz-email').value.trim();
-      if (!name || !email) {
-        showToast('Please enter your name and email.');
-        return;
-      }
-      if (!email.includes('@')) {
-        showToast('Please enter a valid email.');
-        return;
-      }
-      showToast('Order request sent! We\'ll confirm within 2 hours.');
-      closeBizModal();
-      // Reset form
-      document.getElementById('biz-name').value = '';
-      document.getElementById('biz-email').value = '';
-      document.getElementById('biz-company').value = '';
-      document.getElementById('biz-notes').value = '';
-    }
-
-    /* ============================================================
-       TOAST
-       ============================================================ */
+    /* ── Toast ── */
     let toastTimer;
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -1283,17 +1529,85 @@
       toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    /* ============================================================
-       KEYBOARD
-       ============================================================ */
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeBizModal();
-    });
+    /* ── File upload handler ── */
+    function handleFileUpload(input) {
+      if (input.files && input.files[0]) {
+        const nameEl = document.getElementById('upload-filename');
+        nameEl.textContent = '✓ ' + input.files[0].name;
+        nameEl.style.display = 'block';
+        showToast(input.files[0].name + ' attached!');
+      }
+    }
 
-    /* ============================================================
-       INIT
-       ============================================================ */
-    renderBizGrid();
+    /* ── Quote form submit ── */
+    function submitQuote() {
+      const name  = document.getElementById('q-name').value.trim();
+      const email = document.getElementById('q-email').value.trim();
+      if (!name || !email) {
+        showToast('Please fill in your name and email.');
+        return;
+      }
+      if (!email.includes('@')) {
+        showToast('Please enter a valid email.');
+        return;
+      }
+      showToast('Quote request sent! We\'ll reply within 2 hours.');
+      // Reset form fields
+      document.getElementById('q-name').value = '';
+      document.getElementById('q-email').value = '';
+      document.getElementById('q-company').value = '';
+      document.getElementById('q-qty').value = '';
+      document.getElementById('q-category').value = '';
+      document.getElementById('q-desc').value = '';
+      document.getElementById('upload-filename').style.display = 'none';
+    }
+
+    /* ── Scroll reveal ── */
+    function initReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    /* ── Upload zone drag-and-drop ── */
+    function initUploadZone() {
+      const zone = document.querySelector('.upload-zone');
+      if (!zone) return;
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.style.borderColor = 'var(--orange)';
+        zone.style.background = 'var(--orange-glow)';
+      });
+      zone.addEventListener('dragleave', () => {
+        zone.style.borderColor = '';
+        zone.style.background = '';
+      });
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.style.borderColor = '';
+        zone.style.background = '';
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          const nameEl = document.getElementById('upload-filename');
+          nameEl.textContent = '✓ ' + file.name;
+          nameEl.style.display = 'block';
+          showToast(file.name + ' attached!');
+        }
+      });
+    }
+
+    /* ── Init ── */
+    document.addEventListener('DOMContentLoaded', () => {
+      initReveal();
+      initUploadZone();
+    });
   </script>
 </body>
 </html>
