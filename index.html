@@ -1173,6 +1173,7 @@
       <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
       <button class="filter-btn" onclick="filterProducts('home-decor', this)">Home Decor</button>
       <button class="filter-btn" onclick="filterProducts('functional', this)">Functional</button>
+      <button class="filter-btn" onclick="filterProducts('toys', this)">Toys</button>
     </div>
 
     <div class="products-grid" id="products-grid"></div>
@@ -1233,6 +1234,7 @@
           <li><a onclick="filterProducts('all', document.querySelector('.filter-btn'))">All Products</a></li>
           <li><a onclick="filterProducts('home-decor', null)">Home Decor</a></li>
           <li><a onclick="filterProducts('functional', null)">Functional</a></li>
+          <li><a onclick="filterProducts('toys', null)">Toys</a></li>
         </ul>
       </div>
       <div>
@@ -1451,6 +1453,23 @@
         colorImages: {
           '#C5A028': ['images/products/eid-mubarak/1.jpg', 'images/products/eid-mubarak/2.jpg']
         }
+      },
+      {
+        id: 'p10',
+        name: 'Star Fidget Toy',
+        category: 'toys',
+        price: 10,
+        emoji: '⭐',
+        badge: 'new',
+        desc: 'A mesmerising star-shaped fidget spinner with a hypnotic spiral pattern. Spin the geometric layers for a satisfying tactile experience. Dual-tone blue and green colour-shift finish. Perfect for stress relief, desk fidgeting, or as an eye-catching display piece.',
+        colors: ['#3B6B8A', '#2c3e50', '#f0ede8'],
+        sizes: ['Standard'],
+        images: [
+          'images/products/star-fidget/1.jpg',
+          'images/products/star-fidget/2.jpg',
+          'images/products/star-fidget/3.jpg',
+          'images/products/star-fidget/4.jpg'
+        ]
       }
     ];
 
@@ -1595,7 +1614,7 @@
     }
 
     function categoryLabel(cat) {
-      return { 'home-decor': 'Home Decor', 'functional': 'Functional' }[cat] || cat;
+      return { 'home-decor': 'Home Decor', 'functional': 'Functional', 'toys': 'Toys' }[cat] || cat;
     }
 
     /* ============================================================
