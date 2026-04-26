@@ -3,19 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ibz3d — Free 3D Text Generator. Type your text, pick a font, and download a print-ready STL file.">
+  <meta name="description" content="ibz3d — Free 3D Text Generator. Type your text, pick a font, preview in 3D, and order a custom print.">
   <title>ibz3d — 3D Text Generator</title>
-
-  <!-- ============================================================
-       GOOGLE FONTS — same stack as main site
-       ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- ============================================================
-       THREE.JS — importmap for ESM modules from CDN
-       ============================================================ -->
   <script type="importmap">
   {
     "imports": {
@@ -26,9 +19,6 @@
   </script>
 
   <style>
-    /* ============================================================
-       DESIGN TOKENS — mirrors index.html
-       ============================================================ */
     :root {
       --black:        #080808;
       --dark:         #111111;
@@ -40,363 +30,187 @@
       --white:        #f0ede8;
       --grey:         #888888;
       --grey-light:   #bbbbbb;
-
       --font-display: 'Bebas Neue', sans-serif;
       --font-mono:    'DM Mono', monospace;
       --font-body:    'Outfit', sans-serif;
-
       --radius: 2px;
       --transition: 0.2s ease;
     }
 
-    /* ============================================================
-       RESET + BASE
-       ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; }
     body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
-      line-height: 1.6;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
+      background: var(--black); color: var(--white);
+      font-family: var(--font-body); line-height: 1.6;
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
       min-height: 100vh;
     }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; border: none; }
 
-    /* Subtle noise overlay */
     body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
+      content: ''; position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9000;
-      opacity: 0.45;
+      pointer-events: none; z-index: 9000; opacity: 0.45;
     }
 
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--dark); }
     ::-webkit-scrollbar-thumb { background: var(--orange); }
 
-    /* ============================================================
-       LAYOUT
-       ============================================================ */
+    /* LAYOUT */
     .page-header {
-      padding: 24px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+      padding: 24px 32px; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid var(--border);
     }
-    .logo {
-      font-family: var(--font-display);
-      font-size: 28px;
-      letter-spacing: 2px;
-      color: var(--white);
-    }
+    .logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; }
     .logo span { color: var(--orange); }
     .back-link {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--grey);
-      transition: color var(--transition);
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--grey); transition: color var(--transition);
     }
     .back-link:hover { color: var(--orange); }
 
     .app-container {
-      display: grid;
-      grid-template-columns: 340px 1fr;
+      display: grid; grid-template-columns: 340px 1fr;
       min-height: calc(100vh - 73px);
     }
 
-    /* ============================================================
-       SIDEBAR — Controls Panel
-       ============================================================ */
+    /* SIDEBAR */
     .controls {
-      background: var(--dark);
-      border-right: 1px solid var(--border);
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      overflow-y: auto;
+      background: var(--dark); border-right: 1px solid var(--border);
+      padding: 28px 24px; display: flex; flex-direction: column;
+      gap: 20px; overflow-y: auto;
     }
     .controls h2 {
-      font-family: var(--font-display);
-      font-size: 22px;
-      letter-spacing: 3px;
-      color: var(--orange);
-      margin-bottom: 4px;
+      font-family: var(--font-display); font-size: 22px;
+      letter-spacing: 3px; color: var(--orange); margin-bottom: 4px;
     }
 
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--grey-light);
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--grey-light);
     }
     .field input[type="text"],
     .field input[type="number"],
     .field select {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--white);
-      font-family: var(--font-body);
-      font-size: 14px;
-      padding: 10px 12px;
-      outline: none;
-      transition: border-color var(--transition);
-      width: 100%;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--white);
+      font-family: var(--font-body); font-size: 14px;
+      padding: 10px 12px; outline: none;
+      transition: border-color var(--transition); width: 100%;
     }
-    .field input:focus,
-    .field select:focus {
-      border-color: var(--orange);
-    }
+    .field input:focus, .field select:focus { border-color: var(--orange); }
     .field select {
-      cursor: pointer;
-      appearance: none;
+      cursor: pointer; appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
+      background-repeat: no-repeat; background-position: right 12px center;
       padding-right: 32px;
     }
-    .field select option {
-      background: var(--card);
-      color: var(--white);
-    }
+    .field select option { background: var(--card); color: var(--white); }
 
-    /* Dual-column fields */
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    /* Range slider */
-    .field input[type="range"] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      outline: none;
+    /* Unit suffix inside number inputs */
+    .input-with-unit {
+      position: relative;
     }
-    .field input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--orange);
-      cursor: pointer;
-      border: 2px solid var(--dark);
+    .input-with-unit input {
+      padding-right: 36px;
     }
-    .range-value {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--orange);
-      text-align: right;
-    }
-    .range-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .input-with-unit .unit {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+      color: var(--grey); pointer-events: none; text-transform: uppercase;
     }
 
     /* Checkbox */
-    .checkbox-field {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
+    .checkbox-field { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .checkbox-field input[type="checkbox"] {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      cursor: pointer;
-      position: relative;
-      flex-shrink: 0;
+      -webkit-appearance: none; width: 18px; height: 18px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); cursor: pointer; position: relative; flex-shrink: 0;
     }
-    .checkbox-field input[type="checkbox"]:checked {
-      background: var(--orange);
-      border-color: var(--orange);
-    }
+    .checkbox-field input[type="checkbox"]:checked { background: var(--orange); border-color: var(--orange); }
     .checkbox-field input[type="checkbox"]:checked::after {
-      content: '\2713';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: var(--black);
-      font-size: 12px;
-      font-weight: 700;
+      content: '\2713'; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); color: var(--black);
+      font-size: 12px; font-weight: 700;
     }
     .checkbox-field span {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--grey-light);
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--grey-light);
     }
 
-    /* File upload zone */
+    /* Upload zone */
     .upload-zone {
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 12px;
-      text-align: center;
-      cursor: pointer;
+      border: 1px dashed var(--border); border-radius: var(--radius);
+      padding: 12px; text-align: center; cursor: pointer;
       transition: border-color var(--transition), background var(--transition);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--grey);
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--grey);
     }
-    .upload-zone:hover {
-      border-color: var(--orange);
-      background: var(--orange-glow);
-    }
-    .upload-zone.active {
-      border-color: var(--orange);
-      color: var(--orange);
-    }
+    .upload-zone:hover { border-color: var(--orange); background: var(--orange-glow); }
+    .upload-zone.active { border-color: var(--orange); color: var(--orange); }
     .upload-zone input { display: none; }
 
-    /* Download button */
-    .btn-download {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px;
-      background: var(--orange);
-      color: var(--black);
-      font-family: var(--font-display);
-      font-size: 18px;
-      letter-spacing: 3px;
-      border-radius: var(--radius);
-      transition: background var(--transition), transform 0.1s ease;
+    /* ORDER button */
+    .btn-order {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 14px; background: var(--orange); color: var(--black);
+      font-family: var(--font-display); font-size: 18px; letter-spacing: 3px;
+      border-radius: var(--radius); transition: background var(--transition), transform 0.1s ease;
       margin-top: 8px;
     }
-    .btn-download:hover { background: var(--orange-dim); }
-    .btn-download:active { transform: scale(0.98); }
-    .btn-download svg { width: 18px; height: 18px; }
+    .btn-order:hover { background: var(--orange-dim); }
+    .btn-order:active { transform: scale(0.98); }
+    .btn-order svg { width: 18px; height: 18px; }
 
-    /* Divider */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 4px 0;
-    }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
 
-    /* ============================================================
-       VIEWPORT — 3D Canvas
-       ============================================================ */
+    /* VIEWPORT */
     .viewport {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--black);
-      overflow: hidden;
+      position: relative; display: flex; align-items: center;
+      justify-content: center; background: var(--black); overflow: hidden;
     }
-    .viewport canvas {
-      display: block;
-      width: 100% !important;
-      height: 100% !important;
-    }
+    .viewport canvas { display: block; width: 100% !important; height: 100% !important; }
 
-    /* Loading overlay */
     .loading-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: var(--black);
-      z-index: 10;
-      transition: opacity 0.4s ease;
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; background: var(--black);
+      z-index: 10; transition: opacity 0.4s ease;
     }
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border);
-      border-top-color: var(--orange);
-      border-radius: 50%;
+      width: 40px; height: 40px; border: 3px solid var(--border);
+      border-top-color: var(--orange); border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text {
-      margin-top: 16px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--grey);
+      margin-top: 16px; font-family: var(--font-mono); font-size: 11px;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--grey);
     }
 
-    /* Hint badge */
     .viewport-hint {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--grey);
-      background: rgba(0,0,0,0.6);
-      padding: 6px 14px;
-      border-radius: 20px;
-      pointer-events: none;
-      opacity: 0.7;
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--grey); background: rgba(0,0,0,0.6);
+      padding: 6px 14px; border-radius: 20px; pointer-events: none; opacity: 0.7;
     }
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
+    /* FOOTER */
     .page-footer {
-      grid-column: 1 / -1;
-      padding: 16px 32px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--grey);
+      grid-column: 1 / -1; padding: 16px 32px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--grey);
     }
     .page-footer a { color: var(--orange); }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 860px) {
-      .app-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 50vh auto;
-      }
+      .app-container { grid-template-columns: 1fr; grid-template-rows: auto 50vh auto; }
       .controls { order: 1; border-right: none; border-bottom: 1px solid var(--border); }
       .viewport { order: 2; min-height: 50vh; }
       .page-footer { order: 3; }
@@ -405,30 +219,22 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       HEADER
-       ============================================================ -->
   <header class="page-header">
     <div class="logo">IBZ<span>3D</span></div>
     <a href="index.html" class="back-link">&larr; Back to Shop</a>
   </header>
 
-  <!-- ============================================================
-       APP LAYOUT
-       ============================================================ -->
   <div class="app-container">
 
     <!-- ── SIDEBAR ── -->
     <aside class="controls">
       <h2>3D TEXT GENERATOR</h2>
 
-      <!-- Text Input -->
       <div class="field">
         <label>Your Text</label>
         <input type="text" id="textInput" value="ibz3d" maxlength="40" placeholder="Type something...">
       </div>
 
-      <!-- Font Selector -->
       <div class="field">
         <label>Font</label>
         <select id="fontSelect">
@@ -454,10 +260,8 @@
             <option value="Lobster">Lobster</option>
             <option value="Permanent Marker">Permanent Marker</option>
             <option value="Anton">Anton</option>
-            <option value="Abril Fatface">Abril Fatface</option>
           </optgroup>
           <optgroup label="Monospace">
-            <option value="DM Mono">DM Mono</option>
             <option value="Space Mono">Space Mono</option>
             <option value="Inconsolata">Inconsolata</option>
           </optgroup>
@@ -470,7 +274,6 @@
         </select>
       </div>
 
-      <!-- Custom font upload -->
       <div class="upload-zone" id="uploadZone">
         <input type="file" id="fontFileInput" accept=".ttf,.otf,.woff">
         or upload your own .ttf / .otf / .woff
@@ -478,27 +281,26 @@
 
       <hr class="divider">
 
-      <!-- Size -->
-      <div class="field">
-        <div class="range-header">
-          <label>Text Size</label>
-          <span class="range-value" id="sizeValue">14</span>
+      <!-- Size in cm -->
+      <div class="field-row">
+        <div class="field">
+          <label>Text Height</label>
+          <div class="input-with-unit">
+            <input type="number" id="sizeInput" value="2" min="0.5" max="20" step="0.1">
+            <span class="unit">cm</span>
+          </div>
         </div>
-        <input type="range" id="sizeSlider" min="4" max="40" value="14" step="1">
-      </div>
-
-      <!-- Depth (extrusion) -->
-      <div class="field">
-        <div class="range-header">
-          <label>Depth (thickness)</label>
-          <span class="range-value" id="depthValue">4</span>
+        <div class="field">
+          <label>Depth (Thickness)</label>
+          <div class="input-with-unit">
+            <input type="number" id="depthInput" value="0.5" min="0.1" max="5" step="0.1">
+            <span class="unit">cm</span>
+          </div>
         </div>
-        <input type="range" id="depthSlider" min="1" max="20" value="4" step="0.5">
       </div>
 
       <hr class="divider">
 
-      <!-- Bevel toggle + settings -->
       <label class="checkbox-field">
         <input type="checkbox" id="bevelToggle" checked>
         <span>Bevel Edges</span>
@@ -507,15 +309,20 @@
       <div class="field-row" id="bevelFields">
         <div class="field">
           <label>Bevel Size</label>
-          <input type="number" id="bevelSize" value="0.3" min="0" max="3" step="0.1">
+          <div class="input-with-unit">
+            <input type="number" id="bevelSize" value="0.03" min="0" max="0.5" step="0.01">
+            <span class="unit">cm</span>
+          </div>
         </div>
         <div class="field">
           <label>Bevel Depth</label>
-          <input type="number" id="bevelThickness" value="0.3" min="0" max="3" step="0.1">
+          <div class="input-with-unit">
+            <input type="number" id="bevelThickness" value="0.03" min="0" max="0.5" step="0.01">
+            <span class="unit">cm</span>
+          </div>
         </div>
       </div>
 
-      <!-- Base Plate toggle -->
       <label class="checkbox-field">
         <input type="checkbox" id="basePlateToggle">
         <span>Add Base Plate</span>
@@ -524,28 +331,32 @@
       <div class="field-row" id="basePlateFields" style="display:none;">
         <div class="field">
           <label>Plate Height</label>
-          <input type="number" id="basePlateHeight" value="2" min="0.5" max="10" step="0.5">
+          <div class="input-with-unit">
+            <input type="number" id="basePlateHeight" value="0.3" min="0.1" max="2" step="0.05">
+            <span class="unit">cm</span>
+          </div>
         </div>
         <div class="field">
           <label>Padding</label>
-          <input type="number" id="basePlatePadding" value="3" min="0" max="20" step="1">
+          <div class="input-with-unit">
+            <input type="number" id="basePlatePadding" value="0.3" min="0" max="3" step="0.1">
+            <span class="unit">cm</span>
+          </div>
         </div>
       </div>
 
       <hr class="divider">
 
-      <!-- Download Button -->
-      <button class="btn-download" id="downloadBtn">
+      <button class="btn-order" id="orderBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
         </svg>
-        DOWNLOAD .STL
+        ORDER THIS PRINT
       </button>
 
       <p style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--grey);text-align:center;margin-top:-8px;">
-        Free &middot; No signup &middot; Print-ready file
+        Custom made to order &middot; Ships from Ontario
       </p>
     </aside>
 
@@ -578,38 +389,52 @@
 
     /* ==============================================================
        FONT REGISTRY
-       Maps display names to direct .ttf download URLs on
-       fonts.gstatic.com (the same CDN Google Fonts uses).
-       TTFLoader fetches these as ArrayBuffers and parses them
-       using opentype.js bundled inside Three.js.
+       Uses raw.githubusercontent.com to serve TTF files directly
+       from the official google/fonts repo on GitHub.
+       These are stable paths that don't change with version bumps.
+
+       Path pattern: ofl/{fontdir}/{FontName}-{Style}.ttf
+       Some fonts use variable font files: {FontName}[axis].ttf
+       We prefer static Regular files where available.
        ============================================================== */
+    const GH = 'https://raw.githubusercontent.com/google/fonts/main';
     const FONT_REGISTRY = {
-      'Outfit':            'https://fonts.gstatic.com/s/outfit/v11/QGYyz_MVcBeNP4NjuGObqx1XmO1I4e.ttf',
-      'Montserrat':        'https://fonts.gstatic.com/s/montserrat/v29/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtr6Hw5aXo.ttf',
-      'Poppins':           'https://fonts.gstatic.com/s/poppins/v22/pxiEyp8kv8JHgFVrJJfecg.ttf',
-      'Raleway':           'https://fonts.gstatic.com/s/raleway/v34/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrE.ttf',
-      'Oswald':            'https://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1_FvsUZiYA.ttf',
-      'Open Sans':         'https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.ttf',
-      'Lato':              'https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wXg.ttf',
-      'Nunito':            'https://fonts.gstatic.com/s/nunito/v26/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshRTY9jo7eTWk.ttf',
-      'Playfair Display':  'https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvUDQZNLo_U2r.ttf',
-      'Merriweather':      'https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l5-fCZM.ttf',
-      'Lora':              'https://fonts.gstatic.com/s/lora/v35/0QI6MX1D_JOuGQbT0gvTJPa787weuxJBkq0.ttf',
-      'Bebas Neue':        'https://fonts.gstatic.com/s/bebasneue/v14/JTUSjIg69CK48gW7PXooxW5rygbi49c.ttf',
-      'Righteous':         'https://fonts.gstatic.com/s/righteous/v17/1cXxaUPXBpj2rGoU7C9mj3uEicG01A.ttf',
-      'Pacifico':          'https://fonts.gstatic.com/s/pacifico/v22/FwZY7-Qmy14u9lezJ96A4sijpFu_.ttf',
-      'Lobster':           'https://fonts.gstatic.com/s/lobster/v30/neILzCirqoswsqX9zo2mM4MwWJU.ttf',
-      'Permanent Marker':  'https://fonts.gstatic.com/s/permanentmarker/v16/Fh4uPib9Iyv2ucM6pGQMWimMp004HaqIfrT5nlk.ttf',
-      'Anton':             'https://fonts.gstatic.com/s/anton/v25/1Ptgg87GROyAm3Kz-C8CSKlv.ttf',
-      'Abril Fatface':     'https://fonts.gstatic.com/s/abrilfatface/v23/zOL64pLDlL1D99S8HAFadv-ExZVuXg.ttf',
-      'DM Mono':           'https://fonts.gstatic.com/s/dmmono/v14/aFTU7PB1QTsUX8KYhh2aBYyMcA.ttf',
-      'Space Mono':        'https://fonts.gstatic.com/s/spacemono/v13/i7dPIFZifjKcF5UAWdDRYEF8RQ.ttf',
-      'Inconsolata':       'https://fonts.gstatic.com/s/inconsolata/v32/QldgNThLqRwH-OJ1UHjlKENVzkWGVkL3GZQmAwLYxYWI2qfdm7Lpp4U8WR32lw.ttf',
-      'Dancing Script':    'https://fonts.gstatic.com/s/dancingscript/v25/If2cXTr6YS-zF4S-kcSWSVi_sxjsniB7ulvvx4cr5TS-YM25.ttf',
-      'Great Vibes':       'https://fonts.gstatic.com/s/greatvibes/v19/RWmMoKWR9v4ksMfaWd_JN-XCg6UKDXlq.ttf',
-      'Caveat':            'https://fonts.gstatic.com/s/caveat/v18/WnznHAc5bAfYB2QRah7pcpNvOx-pjfJ9SIKjYBxPigs.ttf',
-      'Sacramento':        'https://fonts.gstatic.com/s/sacramento/v15/buEzpo6gcdjy0EiZMBUG4C0f-w.ttf',
+      // Sans Serif
+      'Outfit':            `${GH}/ofl/outfit/Outfit%5Bwght%5D.ttf`,
+      'Montserrat':        `${GH}/ofl/montserrat/Montserrat%5Bwght%5D.ttf`,
+      'Poppins':           `${GH}/ofl/poppins/Poppins-Regular.ttf`,
+      'Raleway':           `${GH}/ofl/raleway/Raleway%5Bwght%5D.ttf`,
+      'Oswald':            `${GH}/ofl/oswald/Oswald%5Bwght%5D.ttf`,
+      'Open Sans':         `${GH}/ofl/opensans/OpenSans%5Bwdth%2Cwght%5D.ttf`,
+      'Lato':              `${GH}/ofl/lato/Lato-Regular.ttf`,
+      'Nunito':            `${GH}/ofl/nunito/Nunito%5Bwght%5D.ttf`,
+      // Serif
+      'Playfair Display':  `${GH}/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf`,
+      'Merriweather':      `${GH}/ofl/merriweather/Merriweather-Regular.ttf`,
+      'Lora':              `${GH}/ofl/lora/Lora%5Bwght%5D.ttf`,
+      // Display
+      'Bebas Neue':        `${GH}/ofl/bebasneue/BebasNeue-Regular.ttf`,
+      'Righteous':         `${GH}/ofl/righteous/Righteous-Regular.ttf`,
+      'Pacifico':          `${GH}/ofl/pacifico/Pacifico-Regular.ttf`,
+      'Lobster':           `${GH}/ofl/lobster/Lobster-Regular.ttf`,
+      'Permanent Marker':  `${GH}/ofl/permanentmarker/PermanentMarker-Regular.ttf`,
+      'Anton':             `${GH}/ofl/anton/Anton-Regular.ttf`,
+      // Monospace
+      'Space Mono':        `${GH}/ofl/spacemono/SpaceMono-Regular.ttf`,
+      'Inconsolata':       `${GH}/ofl/inconsolata/Inconsolata%5Bwdth%2Cwght%5D.ttf`,
+      // Handwriting
+      'Dancing Script':    `${GH}/ofl/dancingscript/DancingScript%5Bwght%5D.ttf`,
+      'Great Vibes':       `${GH}/ofl/greatvibes/GreatVibes-Regular.ttf`,
+      'Caveat':            `${GH}/ofl/caveat/Caveat%5Bwght%5D.ttf`,
+      'Sacramento':        `${GH}/ofl/sacramento/Sacramento-Regular.ttf`,
     };
+
+    /* ==============================================================
+       CM ↔ THREE.JS UNIT CONVERSION
+       We use 1 Three.js unit = 1 cm so the STL exports in cm.
+       The user inputs cm values directly — they map 1:1 to geometry.
+       ============================================================== */
+    const CM = 1;   // 1 unit = 1 cm (for readability)
 
     /* ----------------------------------------------------------
        DOM REFS
@@ -621,10 +446,8 @@
     const fontSelect      = document.getElementById('fontSelect');
     const uploadZone      = document.getElementById('uploadZone');
     const fontFileInput   = document.getElementById('fontFileInput');
-    const sizeSlider      = document.getElementById('sizeSlider');
-    const sizeValue       = document.getElementById('sizeValue');
-    const depthSlider     = document.getElementById('depthSlider');
-    const depthValue      = document.getElementById('depthValue');
+    const sizeInput       = document.getElementById('sizeInput');
+    const depthInput      = document.getElementById('depthInput');
     const bevelToggle     = document.getElementById('bevelToggle');
     const bevelFields     = document.getElementById('bevelFields');
     const bevelSizeIn     = document.getElementById('bevelSize');
@@ -633,7 +456,7 @@
     const basePlateFields    = document.getElementById('basePlateFields');
     const basePlateHeightIn  = document.getElementById('basePlateHeight');
     const basePlatePaddingIn = document.getElementById('basePlatePadding');
-    const downloadBtn     = document.getElementById('downloadBtn');
+    const orderBtn        = document.getElementById('orderBtn');
 
     /* ----------------------------------------------------------
        THREE.JS SCENE
@@ -642,7 +465,7 @@
     scene.background = new THREE.Color(0x080808);
 
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-    camera.position.set(0, 20, 80);
+    camera.position.set(0, 5, 20);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -651,26 +474,23 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
-    controls.minDistance = 5;
-    controls.maxDistance = 300;
+    controls.minDistance = 1;
+    controls.maxDistance = 200;
 
     /* Lighting */
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    keyLight.position.set(30, 50, 40);
+    keyLight.position.set(10, 15, 12);
     scene.add(keyLight);
-
     const rimLight = new THREE.DirectionalLight(0xff4d00, 0.4);
-    rimLight.position.set(-30, -10, -40);
+    rimLight.position.set(-10, -5, -10);
     scene.add(rimLight);
-
     const fillLight = new THREE.DirectionalLight(0x4488ff, 0.2);
-    fillLight.position.set(-20, 30, 10);
+    fillLight.position.set(-8, 10, 5);
     scene.add(fillLight);
 
-    /* Ground grid */
-    scene.add(new THREE.GridHelper(200, 40, 0x252525, 0x1a1a1a));
+    /* Ground grid — 1 unit = 1 cm, grid shows 20cm x 20cm */
+    scene.add(new THREE.GridHelper(20, 20, 0x252525, 0x1a1a1a));
 
     /* ----------------------------------------------------------
        MATERIALS
@@ -701,7 +521,7 @@
         ttfLoader.load(url,
           (data) => { const f = new Font(data); fontCache[name] = f; resolve(f); },
           undefined,
-          reject
+          (err) => reject(err)
         );
       });
     }
@@ -714,7 +534,7 @@
     }
 
     /* ----------------------------------------------------------
-       BUILD 3D TEXT
+       BUILD 3D TEXT  (all dimensions in cm)
        ---------------------------------------------------------- */
     function buildText() {
       if (textMesh) { scene.remove(textMesh); textMesh.geometry.dispose(); textMesh = null; }
@@ -722,44 +542,48 @@
       if (!currentFont) return;
 
       const text  = textInput.value || 'ibz3d';
-      const size  = parseFloat(sizeSlider.value);
-      const depth = parseFloat(depthSlider.value);
+      const size  = parseFloat(sizeInput.value)  * CM;   // cm → units
+      const depth = parseFloat(depthInput.value)  * CM;
       const bOn   = bevelToggle.checked;
-      const bSz   = parseFloat(bevelSizeIn.value);
-      const bDp   = parseFloat(bevelThickIn.value);
+      const bSz   = parseFloat(bevelSizeIn.value) * CM;
+      const bDp   = parseFloat(bevelThickIn.value)* CM;
 
-      const geo = new TextGeometry(text, {
-        font: currentFont, size, depth,
-        curveSegments: 16,
-        bevelEnabled: bOn,
-        bevelThickness: bOn ? bDp : 0,
-        bevelSize:      bOn ? bSz : 0,
-        bevelSegments:  bOn ? 5   : 0,
-      });
+      try {
+        const geo = new TextGeometry(text, {
+          font: currentFont, size, depth,
+          curveSegments: 16,
+          bevelEnabled: bOn,
+          bevelThickness: bOn ? bDp : 0,
+          bevelSize:      bOn ? bSz : 0,
+          bevelSegments:  bOn ? 5   : 0,
+        });
 
-      geo.computeBoundingBox();
-      const bb = geo.boundingBox;
-      const tw = bb.max.x - bb.min.x;
-      const th = bb.max.y - bb.min.y;
+        geo.computeBoundingBox();
+        const bb = geo.boundingBox;
+        const tw = bb.max.x - bb.min.x;
+        const th = bb.max.y - bb.min.y;
 
-      // Create mesh — rotated face-up (XZ plane) for 3D printing
-      textMesh = new THREE.Mesh(geo, textMat);
-      textMesh.rotation.x = -Math.PI / 2;
-      textMesh.position.set(-tw / 2 - bb.min.x, depth, th / 2 + bb.min.y);
-      scene.add(textMesh);
+        // Rotate face-up for 3D printing (XZ plane)
+        textMesh = new THREE.Mesh(geo, textMat);
+        textMesh.rotation.x = -Math.PI / 2;
+        textMesh.position.set(-tw / 2 - bb.min.x, depth, th / 2 + bb.min.y);
+        scene.add(textMesh);
 
-      // Optional base plate
-      if (basePlateToggle.checked) {
-        const pad = parseFloat(basePlatePaddingIn.value);
-        const pH  = parseFloat(basePlateHeightIn.value);
-        const plateGeo = new THREE.BoxGeometry(tw + pad * 2, pH, th + pad * 2);
-        baseMesh = new THREE.Mesh(plateGeo, baseMat);
-        baseMesh.position.set(0, -pH / 2, 0);
-        scene.add(baseMesh);
-        textMesh.position.y = depth + pH;
+        // Optional base plate
+        if (basePlateToggle.checked) {
+          const pad = parseFloat(basePlatePaddingIn.value) * CM;
+          const pH  = parseFloat(basePlateHeightIn.value)  * CM;
+          const plateGeo = new THREE.BoxGeometry(tw + pad * 2, pH, th + pad * 2);
+          baseMesh = new THREE.Mesh(plateGeo, baseMat);
+          baseMesh.position.set(0, -pH / 2, 0);
+          scene.add(baseMesh);
+          textMesh.position.y = depth + pH;
+        }
+
+        frameCamera();
+      } catch (e) {
+        console.warn('TextGeometry error:', e.message);
       }
-
-      frameCamera();
     }
 
     function frameCamera() {
@@ -794,7 +618,7 @@
         buildText();
       } catch (e) {
         console.error('Font load error:', e);
-        loadingLabel.textContent = 'Font failed — try another';
+        loadingLabel.textContent = 'Font failed \u2014 try another';
       } finally {
         setTimeout(() => loadingOverlay.classList.add('hidden'), 300);
       }
@@ -826,7 +650,7 @@
           buildText();
         } catch (err) {
           console.error('Font parse error:', err);
-          alert('Could not parse that font file. Try a different .ttf or .otf.');
+          alert('Could not parse that font. Try a different .ttf or .otf file.');
         }
       };
       reader.readAsArrayBuffer(file);
@@ -835,8 +659,8 @@
     uploadZone.addEventListener('click', () => document.getElementById('fontFileInput').click());
     fontFileInput.addEventListener('change', handleFileUpload);
 
-    sizeSlider.addEventListener('input', () => { sizeValue.textContent = sizeSlider.value; scheduleRebuild(); });
-    depthSlider.addEventListener('input', () => { depthValue.textContent = depthSlider.value; scheduleRebuild(); });
+    sizeInput.addEventListener('input', scheduleRebuild);
+    depthInput.addEventListener('input', scheduleRebuild);
 
     bevelToggle.addEventListener('change', () => {
       bevelFields.style.display = bevelToggle.checked ? 'grid' : 'none';
@@ -853,25 +677,30 @@
     basePlatePaddingIn.addEventListener('input', scheduleRebuild);
 
     /* ----------------------------------------------------------
-       STL DOWNLOAD
+       ORDER BUTTON — sends user to quote form (or mailto)
        ---------------------------------------------------------- */
-    downloadBtn.addEventListener('click', () => {
-      const group = new THREE.Group();
-      if (textMesh) { const c = textMesh.clone(); c.geometry = textMesh.geometry.clone(); group.add(c); }
-      if (baseMesh) { const c = baseMesh.clone(); c.geometry = baseMesh.geometry.clone(); group.add(c); }
-      if (!group.children.length) return;
+    orderBtn.addEventListener('click', () => {
+      const text  = textInput.value || 'ibz3d';
+      const font  = fontSelect.value;
+      const size  = sizeInput.value;
+      const depth = depthInput.value;
+      const bevel = bevelToggle.checked ? 'yes' : 'no';
+      const base  = basePlateToggle.checked ? 'yes' : 'no';
 
-      const buf  = new STLExporter().parse(group, { binary: true });
-      const blob = new Blob([buf], { type: 'application/octet-stream' });
-      const url  = URL.createObjectURL(blob);
-      const a    = Object.assign(document.createElement('a'), {
-        href: url,
-        download: 'ibz3d_' + (textInput.value || 'text').replace(/[^a-zA-Z0-9]/g, '_') + '.stl',
-      });
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Build a mailto link with pre-filled details
+      const subject = encodeURIComponent('3D Text Order — ' + text);
+      const body = encodeURIComponent(
+        `Hi ibz3d,\n\nI'd like to order a custom 3D printed text:\n\n` +
+        `Text: ${text}\n` +
+        `Font: ${font}\n` +
+        `Height: ${size} cm\n` +
+        `Depth: ${depth} cm\n` +
+        `Bevel: ${bevel}\n` +
+        `Base plate: ${base}\n\n` +
+        `Please send me a quote.\n\nThank you!`
+      );
+
+      window.location.href = `mailto:info@ibz3d.ca?subject=${subject}&body=${body}`;
     });
 
     /* ----------------------------------------------------------
@@ -894,7 +723,7 @@
     })();
 
     /* ----------------------------------------------------------
-       BOOT — load initial font
+       BOOT
        ---------------------------------------------------------- */
     loadAndBuild('Outfit');
   </script>
