@@ -125,6 +125,21 @@
       color: var(--grey); pointer-events: none; text-transform: uppercase;
     }
 
+    /* Color swatches */
+    .color-swatches {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .swatch {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border);
+      cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease;
+      padding: 0; outline: none;
+    }
+    .swatch:hover { transform: scale(1.15); }
+    .swatch.active {
+      border-color: var(--white);
+      box-shadow: 0 0 0 2px var(--black), 0 0 0 4px var(--white);
+    }
+
     /* Checkbox */
     .checkbox-field { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .checkbox-field input[type="checkbox"] {
@@ -238,40 +253,36 @@
       <div class="field">
         <label>Font</label>
         <select id="fontSelect">
-          <optgroup label="Sans Serif">
-            <option value="Outfit" selected>Outfit</option>
-            <option value="Montserrat">Montserrat</option>
-            <option value="Poppins">Poppins</option>
-            <option value="Raleway">Raleway</option>
-            <option value="Oswald">Oswald</option>
-            <option value="Open Sans">Open Sans</option>
-            <option value="Lato">Lato</option>
-            <option value="Nunito">Nunito</option>
-          </optgroup>
-          <optgroup label="Serif">
-            <option value="Playfair Display">Playfair Display</option>
-            <option value="Merriweather">Merriweather</option>
-            <option value="Lora">Lora</option>
-          </optgroup>
-          <optgroup label="Display">
-            <option value="Bebas Neue">Bebas Neue</option>
-            <option value="Righteous">Righteous</option>
-            <option value="Pacifico">Pacifico</option>
-            <option value="Lobster">Lobster</option>
-            <option value="Permanent Marker">Permanent Marker</option>
-            <option value="Anton">Anton</option>
-          </optgroup>
-          <optgroup label="Monospace">
-            <option value="Space Mono">Space Mono</option>
-            <option value="Inconsolata">Inconsolata</option>
-          </optgroup>
-          <optgroup label="Handwriting">
-            <option value="Dancing Script">Dancing Script</option>
-            <option value="Great Vibes">Great Vibes</option>
-            <option value="Caveat">Caveat</option>
-            <option value="Sacramento">Sacramento</option>
-          </optgroup>
+          <option value="Dancing Script" selected>Dancing Script</option>
+          <option value="Great Vibes">Great Vibes</option>
+          <option value="Pacifico">Pacifico</option>
+          <option value="Sacramento">Sacramento</option>
+          <option value="Caveat">Caveat</option>
+          <option value="Lobster">Lobster</option>
+          <option value="Alex Brush">Alex Brush</option>
+          <option value="Allura">Allura</option>
+          <option value="Satisfy">Satisfy</option>
+          <option value="Tangerine">Tangerine</option>
+          <option value="Pinyon Script">Pinyon Script</option>
+          <option value="Rouge Script">Rouge Script</option>
         </select>
+      </div>
+
+      <!-- Color swatch -->
+      <div class="field">
+        <label>Color</label>
+        <div class="color-swatches" id="colorSwatches">
+          <button class="swatch active" data-color="#FF4D00" style="background:#FF4D00" title="Orange"></button>
+          <button class="swatch" data-color="#FFFFFF" style="background:#FFFFFF" title="White"></button>
+          <button class="swatch" data-color="#222222" style="background:#222222" title="Black"></button>
+          <button class="swatch" data-color="#C0A050" style="background:#C0A050" title="Gold"></button>
+          <button class="swatch" data-color="#C0C0C0" style="background:#C0C0C0" title="Silver"></button>
+          <button class="swatch" data-color="#2196F3" style="background:#2196F3" title="Blue"></button>
+          <button class="swatch" data-color="#E91E63" style="background:#E91E63" title="Pink"></button>
+          <button class="swatch" data-color="#4CAF50" style="background:#4CAF50" title="Green"></button>
+          <button class="swatch" data-color="#9C27B0" style="background:#9C27B0" title="Purple"></button>
+          <button class="swatch" data-color="#F44336" style="background:#F44336" title="Red"></button>
+        </div>
       </div>
 
       <div class="upload-zone" id="uploadZone">
@@ -399,34 +410,18 @@
        ============================================================== */
     const GH = 'https://raw.githubusercontent.com/google/fonts/main';
     const FONT_REGISTRY = {
-      // Sans Serif
-      'Outfit':            `${GH}/ofl/outfit/Outfit%5Bwght%5D.ttf`,
-      'Montserrat':        `${GH}/ofl/montserrat/Montserrat%5Bwght%5D.ttf`,
-      'Poppins':           `${GH}/ofl/poppins/Poppins-Regular.ttf`,
-      'Raleway':           `${GH}/ofl/raleway/Raleway%5Bwght%5D.ttf`,
-      'Oswald':            `${GH}/ofl/oswald/Oswald%5Bwght%5D.ttf`,
-      'Open Sans':         `${GH}/ofl/opensans/OpenSans%5Bwdth%2Cwght%5D.ttf`,
-      'Lato':              `${GH}/ofl/lato/Lato-Regular.ttf`,
-      'Nunito':            `${GH}/ofl/nunito/Nunito%5Bwght%5D.ttf`,
-      // Serif
-      'Playfair Display':  `${GH}/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf`,
-      'Merriweather':      `${GH}/ofl/merriweather/Merriweather-Regular.ttf`,
-      'Lora':              `${GH}/ofl/lora/Lora%5Bwght%5D.ttf`,
-      // Display
-      'Bebas Neue':        `${GH}/ofl/bebasneue/BebasNeue-Regular.ttf`,
-      'Righteous':         `${GH}/ofl/righteous/Righteous-Regular.ttf`,
-      'Pacifico':          `${GH}/ofl/pacifico/Pacifico-Regular.ttf`,
-      'Lobster':           `${GH}/ofl/lobster/Lobster-Regular.ttf`,
-      'Permanent Marker':  `${GH}/ofl/permanentmarker/PermanentMarker-Regular.ttf`,
-      'Anton':             `${GH}/ofl/anton/Anton-Regular.ttf`,
-      // Monospace
-      'Space Mono':        `${GH}/ofl/spacemono/SpaceMono-Regular.ttf`,
-      'Inconsolata':       `${GH}/ofl/inconsolata/Inconsolata%5Bwdth%2Cwght%5D.ttf`,
-      // Handwriting
       'Dancing Script':    `${GH}/ofl/dancingscript/DancingScript%5Bwght%5D.ttf`,
       'Great Vibes':       `${GH}/ofl/greatvibes/GreatVibes-Regular.ttf`,
-      'Caveat':            `${GH}/ofl/caveat/Caveat%5Bwght%5D.ttf`,
+      'Pacifico':          `${GH}/ofl/pacifico/Pacifico-Regular.ttf`,
       'Sacramento':        `${GH}/ofl/sacramento/Sacramento-Regular.ttf`,
+      'Caveat':            `${GH}/ofl/caveat/Caveat%5Bwght%5D.ttf`,
+      'Lobster':           `${GH}/ofl/lobster/Lobster-Regular.ttf`,
+      'Alex Brush':        `${GH}/ofl/alexbrush/AlexBrush-Regular.ttf`,
+      'Allura':            `${GH}/ofl/allura/Allura-Regular.ttf`,
+      'Satisfy':           `${GH}/ofl/satisfy/Satisfy-Regular.ttf`,
+      'Tangerine':         `${GH}/ofl/tangerine/Tangerine-Regular.ttf`,
+      'Pinyon Script':     `${GH}/ofl/pinyonscript/PinyonScript-Regular.ttf`,
+      'Rouge Script':      `${GH}/ofl/rougescript/RougeScript-Regular.ttf`,
     };
 
     /* ==============================================================
@@ -677,6 +672,27 @@
     basePlatePaddingIn.addEventListener('input', scheduleRebuild);
 
     /* ----------------------------------------------------------
+       COLOR SWATCHES
+       ---------------------------------------------------------- */
+    let selectedColor = '#FF4D00';
+    const swatchContainer = document.getElementById('colorSwatches');
+
+    swatchContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.swatch');
+      if (!btn) return;
+
+      // Update active state
+      swatchContainer.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Update material color
+      selectedColor = btn.dataset.color;
+      textMat.color.set(selectedColor);
+
+      // No rebuild needed — material update is instant
+    });
+
+    /* ----------------------------------------------------------
        ORDER BUTTON — sends user to quote form (or mailto)
        ---------------------------------------------------------- */
     orderBtn.addEventListener('click', () => {
@@ -693,6 +709,7 @@
         `Hi ibz3d,\n\nI'd like to order a custom 3D printed text:\n\n` +
         `Text: ${text}\n` +
         `Font: ${font}\n` +
+        `Color: ${selectedColor}\n` +
         `Height: ${size} cm\n` +
         `Depth: ${depth} cm\n` +
         `Bevel: ${bevel}\n` +
@@ -725,7 +742,7 @@
     /* ----------------------------------------------------------
        BOOT
        ---------------------------------------------------------- */
-    loadAndBuild('Outfit');
+    loadAndBuild('Dancing Script');
   </script>
 </body>
 </html>
