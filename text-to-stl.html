@@ -63,7 +63,8 @@
       padding: 24px 32px; display: flex; align-items: center;
       justify-content: space-between; border-bottom: 1px solid var(--border);
     }
-    .logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; }
+    .logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; color: var(--white); text-decoration: none; }
+    .logo em { color: var(--orange); font-style: normal; }
     .logo span { color: var(--orange); }
     .back-link {
       font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px;
@@ -243,8 +244,11 @@
 <body>
 
   <header class="page-header">
-    <div class="logo">IBZ<span>3D</span></div>
-    <a href="index.html" class="back-link">&larr; Back to Shop</a>
+    <a href="index.html" class="logo">ibz<em>3d</em></a>
+    <div style="display:flex; align-items:center; gap:24px;">
+      <a href="index.html" class="back-link">&larr; Back to Shop</a>
+      <a href="business.html" class="back-link">For Business</a>
+    </div>
   </header>
 
   <div class="app-container">
@@ -390,8 +394,12 @@
 
     <!-- ── FOOTER ── -->
     <footer class="page-footer">
-      <span>ibz3d.ca &mdash; 3D Text Generator</span>
-      <span>Powered by <a href="https://threejs.org" target="_blank" rel="noopener">Three.js</a></span>
+      <span><a href="index.html" style="color:var(--white);text-decoration:none;">ibz<em style="color:var(--orange);font-style:normal;">3d</em>.ca</a> &mdash; 3D Text Generator</span>
+      <span style="display:flex;gap:20px;">
+        <a href="index.html">Shop</a>
+        <a href="business.html">For Business</a>
+        <a href="mailto:hello@ibz3d.ca">Contact</a>
+      </span>
     </footer>
   </div>
 
