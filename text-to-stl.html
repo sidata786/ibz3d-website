@@ -72,22 +72,25 @@
     .back-link:hover { color: var(--orange); }
 
     .app-container {
-      display: grid; grid-template-columns: 340px 1fr;
+      display: grid; grid-template-columns: 1fr;
+      grid-template-rows: 55vh auto auto;
       min-height: calc(100vh - 73px);
     }
 
-    /* SIDEBAR */
+    /* CONTROLS — bottom panel */
     .controls {
-      background: var(--dark); border-right: 1px solid var(--border);
-      padding: 28px 24px; display: flex; flex-direction: column;
-      gap: 20px; overflow-y: auto;
+      background: var(--dark); border-top: 1px solid var(--border);
+      padding: 24px 32px; display: flex; flex-direction: row; flex-wrap: wrap;
+      gap: 16px 24px; overflow-y: auto; align-items: flex-start;
+      order: 2;
     }
     .controls h2 {
       font-family: var(--font-display); font-size: 22px;
-      letter-spacing: 3px; color: var(--orange); margin-bottom: 4px;
+      letter-spacing: 3px; color: var(--orange); margin-bottom: 0;
+      width: 100%;
     }
 
-    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field { display: flex; flex-direction: column; gap: 6px; min-width: 160px; flex: 1; }
     .field label {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px;
       text-transform: uppercase; color: var(--grey-light);
@@ -110,7 +113,7 @@
     }
     .field select option { background: var(--card); color: var(--white); }
 
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 200px; }
 
     /* Unit suffix inside number inputs */
     .input-with-unit {
@@ -173,21 +176,25 @@
     /* ORDER button */
     .btn-order {
       display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; padding: 14px; background: var(--orange); color: var(--black);
+      padding: 14px 28px; background: var(--orange); color: var(--black);
       font-family: var(--font-display); font-size: 18px; letter-spacing: 3px;
       border-radius: var(--radius); transition: background var(--transition), transform 0.1s ease;
-      margin-top: 8px;
+      white-space: nowrap; align-self: flex-end;
     }
     .btn-order:hover { background: var(--orange-dim); }
     .btn-order:active { transform: scale(0.98); }
     .btn-order svg { width: 18px; height: 18px; }
 
-    .divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+    .divider {
+      border: none; border-top: 1px solid var(--border); margin: 0;
+      width: 100%; display: none;  /* hide horizontal dividers in row layout */
+    }
 
     /* VIEWPORT */
     .viewport {
       position: relative; display: flex; align-items: center;
       justify-content: center; background: var(--black); overflow: hidden;
+      order: 1;
     }
     .viewport canvas { display: block; width: 100% !important; height: 100% !important; }
 
@@ -217,18 +224,19 @@
 
     /* FOOTER */
     .page-footer {
-      grid-column: 1 / -1; padding: 16px 32px; border-top: 1px solid var(--border);
+      padding: 16px 32px; border-top: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
       font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--grey);
+      text-transform: uppercase; color: var(--grey); order: 3;
     }
     .page-footer a { color: var(--orange); }
 
     @media (max-width: 860px) {
-      .app-container { grid-template-columns: 1fr; grid-template-rows: auto 50vh auto; }
-      .controls { order: 1; border-right: none; border-bottom: 1px solid var(--border); }
-      .viewport { order: 2; min-height: 50vh; }
-      .page-footer { order: 3; }
+      .controls { flex-direction: column; padding: 20px 16px; }
+      .controls .field { min-width: unset; width: 100%; }
+      .field-row { width: 100%; }
+      .btn-order { width: 100%; align-self: stretch; }
+      .app-container { grid-template-rows: 45vh auto auto; }
     }
   </style>
 </head>
