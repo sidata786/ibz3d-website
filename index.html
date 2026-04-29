@@ -1345,39 +1345,6 @@
         sizes: ['S — 3"', 'M — 5"', 'L — 7"']
       },
       {
-        id: 'p2',
-        name: 'Mountain Lamp',
-        category: 'home-decor',
-        price: 58,
-        emoji: '🏔️',
-        badge: 'hot',
-        desc: 'Multi-layer topographic night light with USB-C power. Warm white LED diffused through layered translucent panels. Each one is unique.',
-        colors: ['#f0ede8', '#a8c5da', '#f4a460', '#98d8c8'],
-        sizes: ['Standard', 'XL']
-      },
-      {
-        id: 'p3',
-        name: 'Hex Desk Organizer',
-        category: 'functional',
-        price: 44,
-        emoji: '✏️',
-        badge: null,
-        desc: 'Modular hexagonal desk organizer. Stack and arrange to fit your workspace. Each hex connects magnetically for endless configurations.',
-        colors: ['#f0ede8', '#080808', '#FF4D00', '#2c3e50'],
-        sizes: ['3-Hex', '6-Hex', '9-Hex']
-      },
-      {
-        id: 'p4',
-        name: 'Floating Shelf Brackets',
-        category: 'functional',
-        price: 32,
-        emoji: '🔩',
-        badge: null,
-        desc: 'Geometric floating shelf brackets. Supports shelves up to 12" deep and 15 lbs. Sold as a pair. All mounting hardware included.',
-        colors: ['#f0ede8', '#080808'],
-        sizes: ['Small', 'Medium', 'Large']
-      },
-      {
         id: 'p5',
         name: 'Wave Vase',
         category: 'home-decor',
@@ -1501,12 +1468,16 @@
         id: 'p12',
         name: 'Jewellery Box',
         category: 'home-decor',
-        price: 48,
+        price: 5,
         emoji: '💎',
         badge: 'new',
         desc: 'A handcrafted octagonal jewellery box featuring an intricate Islamic geometric lattice lid in copper, set against a deep matte charcoal base. The pierced star and floral pattern lets light filter through while keeping your treasures safely tucked away. Perfect for rings, earrings, watches, or as a stunning decorative piece on a vanity, dresser, or shelf. Makes a meaningful gift for weddings, anniversaries, Eid, or housewarmings.',
-        colors: ['#B87333', '#1a1a1a', '#C5A028', '#f0ede8'],
-        sizes: ['Standard'],
+        colors: [],
+        sizes: ['Small', 'Medium', 'Large'],
+        sizePrices: { 'Small': 5, 'Medium': 20, 'Large': 30 },
+        customSize: true,
+        customSizeMode: 'wh-cm',
+        customSizePrice: 30,
         images: [
           'images/products/jewellery-box/1.jpg',
           'images/products/jewellery-box/2.jpg',
@@ -1530,12 +1501,20 @@
       const p = PRODUCTS.find(x => x.id === productId);
       if (!p) return;
 
-      const key = productId + (extraMeta || '');
+      // Determine effective price: per-size if available, else base price
+      let effectivePrice = p.price;
+      if (p.sizePrices && selectedSize && p.sizePrices[selectedSize] != null) {
+        effectivePrice = p.sizePrices[selectedSize];
+      } else if (p.customSizePrice != null && selectedSize && /\(Custom\)/.test(selectedSize)) {
+        effectivePrice = p.customSizePrice;
+      }
+
+      const key = productId + (extraMeta || '') + '|' + effectivePrice;
       const existing = cart.find(i => i.key === key);
       if (existing) {
         existing.qty++;
       } else {
-        cart.push({ key, id: p.id, name: p.name, price: p.price, emoji: p.emoji,
+        cart.push({ key, id: p.id, name: p.name, price: effectivePrice, emoji: p.emoji,
                     material: extraMeta || p.material, qty: 1 });
       }
       updateCartUI();
@@ -1634,7 +1613,7 @@
             <div class="product-category">${categoryLabel(p.category)}</div>
             <div class="product-name">${escHtml(p.name)}</div>
             <div class="product-footer">
-              <div class="product-price">$${p.price} <span>CAD</span></div>
+              <div class="product-price">${p.sizePrices ? 'From ' : ''}$${p.price} <span>CAD</span></div>
             </div>
           </div>
         </div>
@@ -1715,7 +1694,7 @@
       document.getElementById('modal-category').textContent = categoryLabel(p.category);
       document.getElementById('modal-name').textContent = p.name;
       document.getElementById('modal-desc').textContent = p.desc;
-      document.getElementById('modal-price').textContent = '$' + p.price + ' CAD';
+      document.getElementById('modal-price').textContent = (p.sizePrices ? 'From $' : '$') + p.price + ' CAD';
 
       // Swatches
       document.getElementById('modal-swatches').innerHTML = p.colors.map((c, i) => `
@@ -1726,29 +1705,64 @@
       `).join('');
 
       // Sizes
-      let sizesHtml = p.sizes.map((s, i) => `
+      let sizesHtml = p.sizes.map((s, i) => {
+        const sp = p.sizePrices && p.sizePrices[s];
+        const label = sp != null ? `${escHtml(s)} — $${sp}` : escHtml(s);
+        return `
         <button class="size-btn ${i === 0 ? 'selected' : ''}"
-                onclick="selectSize(this, '${escHtml(s)}')">${escHtml(s)}</button>
-      `).join('');
+                onclick="selectSize(this, '${escHtml(s)}')">${label}</button>
+      `;
+      }).join('');
 
       if (p.customSize) {
-        sizesHtml += `
-          <button class="size-btn" onclick="showCustomSizeInput(this)" id="custom-size-toggle"
-            style="border-style:dashed;color:var(--orange);border-color:var(--orange);">✎ Custom</button>
-          <div id="custom-size-row" style="display:none;width:100%;margin-top:8px;gap:8px;align-items:center;">
-            <input type="number" id="custom-size-input" min="1" max="48" placeholder="Width in inches"
-              style="flex:1;background:var(--dark);border:1px solid var(--border);color:var(--white);
-                     font-family:var(--font-mono);font-size:12px;padding:8px 12px;outline:none;
-                     width:120px;" 
-              onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'" />
-            <span style="font-family:var(--font-mono);font-size:11px;color:var(--grey);">inches</span>
-            <button onclick="applyCustomSize()" style="background:var(--orange);color:var(--black);border:none;
-              font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
-              padding:8px 14px;cursor:pointer;">Apply</button>
-          </div>`;
+        if (p.customSizeMode === 'wh-cm') {
+          const cp = (p.customSizePrice != null) ? ` — $${p.customSizePrice}` : '';
+          sizesHtml += `
+            <button class="size-btn" onclick="showCustomSizeInput(this)" id="custom-size-toggle"
+              style="border-style:dashed;color:var(--orange);border-color:var(--orange);">✎ Custom${cp}</button>
+            <div id="custom-size-row" style="display:none;width:100%;margin-top:8px;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input type="number" id="custom-size-w" min="1" max="100" placeholder="Width"
+                style="width:90px;background:var(--dark);border:1px solid var(--border);color:var(--white);
+                       font-family:var(--font-mono);font-size:12px;padding:8px 12px;outline:none;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'" />
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--grey);">×</span>
+              <input type="number" id="custom-size-h" min="1" max="100" placeholder="Height"
+                style="width:90px;background:var(--dark);border:1px solid var(--border);color:var(--white);
+                       font-family:var(--font-mono);font-size:12px;padding:8px 12px;outline:none;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'" />
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--grey);">cm</span>
+              <button onclick="applyCustomSize()" style="background:var(--orange);color:var(--black);border:none;
+                font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+                padding:8px 14px;cursor:pointer;">Apply</button>
+            </div>`;
+        } else {
+          sizesHtml += `
+            <button class="size-btn" onclick="showCustomSizeInput(this)" id="custom-size-toggle"
+              style="border-style:dashed;color:var(--orange);border-color:var(--orange);">✎ Custom</button>
+            <div id="custom-size-row" style="display:none;width:100%;margin-top:8px;gap:8px;align-items:center;">
+              <input type="number" id="custom-size-input" min="1" max="48" placeholder="Width in inches"
+                style="flex:1;background:var(--dark);border:1px solid var(--border);color:var(--white);
+                       font-family:var(--font-mono);font-size:12px;padding:8px 12px;outline:none;
+                       width:120px;" 
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'" />
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--grey);">inches</span>
+              <button onclick="applyCustomSize()" style="background:var(--orange);color:var(--black);border:none;
+                font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+                padding:8px 14px;cursor:pointer;">Apply</button>
+            </div>`;
+        }
       }
 
       document.getElementById('modal-sizes').innerHTML = sizesHtml;
+
+      // If first size has a per-size price, set the displayed price + selectedSize accordingly
+      if (p.sizePrices && p.sizes.length) {
+        const firstSize = p.sizes[0];
+        if (p.sizePrices[firstSize] != null) {
+          selectedSize = firstSize;
+          document.getElementById('modal-price').textContent = '$' + p.sizePrices[firstSize] + ' CAD';
+        }
+      }
 
       // Meta tags
       document.getElementById('modal-meta').innerHTML = [
@@ -1926,6 +1940,11 @@
       // Collapse custom size input if a preset is clicked
       const row = document.getElementById('custom-size-row');
       if (row) row.style.display = 'none';
+      // Update displayed price if this product has per-size pricing
+      const p = PRODUCTS.find(x => x.id === activeProductId);
+      if (p && p.sizePrices && p.sizePrices[size] != null) {
+        document.getElementById('modal-price').textContent = '$' + p.sizePrices[size] + ' CAD';
+      }
     }
 
     function showCustomSizeInput(btn) {
@@ -1942,6 +1961,29 @@
     }
 
     function applyCustomSize() {
+      const p = PRODUCTS.find(x => x.id === activeProductId);
+      if (!p) return;
+
+      // W × H in cm mode
+      if (p.customSizeMode === 'wh-cm') {
+        const wEl = document.getElementById('custom-size-w');
+        const hEl = document.getElementById('custom-size-h');
+        if (!wEl || !hEl) return;
+        const w = parseFloat(wEl.value);
+        const h = parseFloat(hEl.value);
+        if (!w || w < 1 || w > 100 || !h || h < 1 || h > 100) {
+          showToast('Please enter width and height between 1 and 100 cm.');
+          return;
+        }
+        selectedSize = w + '×' + h + ' cm (Custom)';
+        if (p.customSizePrice != null) {
+          document.getElementById('modal-price').textContent = '$' + p.customSizePrice + ' CAD';
+        }
+        showToast('Custom size set: ' + w + '×' + h + ' cm');
+        return;
+      }
+
+      // Default: single width-in-inches mode
       const input = document.getElementById('custom-size-input');
       if (!input) return;
       const val = parseFloat(input.value);
